@@ -1,5 +1,5 @@
-const API_KEY = "1f819827af65b03b5a00f27f5e54f1ef"
-const BASE_URL = "https://api.openweathermap.org/data/2.5"
+const API_KEY = process.env.REACT_APP_API_KEY
+const BASE_URL = process.env.REACT_APP_BASE_API_URL
 
 const getWeatherData = (info, searchParams) => {
     const url = new URL(BASE_URL + "/" + info)
