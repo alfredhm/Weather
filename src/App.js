@@ -9,6 +9,8 @@ function App() {
     console.log(new Date(data.sunrise * 1000).toLocaleDateString("en-US"), new Date(data.sunrise * 1000).toLocaleTimeString("en-US"))
   }
 
+  getWeather()
+  
   return (
     <div className="App">
       <main>
