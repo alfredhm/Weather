@@ -1,7 +1,8 @@
 const API_KEY = process.env.REACT_APP_API_KEY
-const BASE_URL = process.env.REACT_APP_BASE_API_URL
+const BASE_URL = process.env.REACT_APP_BASE_URL
 
 const getWeatherData = (info, searchParams) => {
+    console.log(BASE_URL + "/" + info)
     const url = new URL(BASE_URL + "/" + info)
     url.search = new URLSearchParams({ ...searchParams, appid: API_KEY})
 
