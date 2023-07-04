@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    html {
-        font-family: monospace;
-    }
-}
+body {
+    margin: 0;
+    font-family: monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
