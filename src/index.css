@@ -1,12 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro&display=swap');
 
 body {
     margin: 0;
-    font-family: monospace;
+    font-family: 'Maven Pro', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: white;
   }
   
   code {
