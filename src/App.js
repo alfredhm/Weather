@@ -5,6 +5,8 @@ import CurrentWeather from './components/CurrentWeather'
 import DailyWeather from './components/DailyWeather'
 
 import clouds from "./clouds.jpg"
+import houston from "./houston.jpg"
+import astros from "./astros.jpg"
 
 function App() {
   const getWeather = async () => {
@@ -17,11 +19,10 @@ function App() {
   return (
     <div className="flex justify-center w-full h-full">
       <main className=" m-10 fixed w-2/6 h-5/6 rounded-xl overflow-y-scroll">
-        <div style={{ backgroundImage: `url(${clouds})` }} className="flex flex-col justify-normal rounded-xl bg-center bg-cover bg-no-repeat p-5 gap-5">
+        <div style={{ backgroundImage: `url(${astros})` }} className="flex flex-col justify-normal rounded-xl bg-center bg-cover bg-no-repeat p-5 pt-28 gap-5 h-2screen bg-fixed z-10 w-inherit">
           <CurrentWeather />
           <HourlyWeather />
           <DailyWeather />
-          <div className=" h-screen"></div>
         </div>
       </main>
     </div>

@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        '101': '1000px'
+        '101': '1000px',
+        '2screen': '200vh'
       },
       width: {
         '101': '850px'
