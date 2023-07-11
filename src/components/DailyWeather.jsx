@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { IoIosThunderstorm, IoIosCloud, IoIosRainy, IoIosSunny } from "react-icons/io";
 
@@ -16,15 +16,15 @@ const DailyWeather = () => {
   ]
 
   return (
-    <div className="backdrop-blur-lg px-4">
+    <div className="backdrop-blur-lg px-4 rounded-xl w-full">
       <div className="flex flex-col last:border-none">
           {days.map((day, index) => (
-            <div className={ index === days.length - 1 ? "flex flex-row justify-between text-lg font-bold py-3 " : "flex flex-row justify-between text-lg font-bold py-3 border-b-2 border-b-blue-300/10"}>
-              <div className="flex flex-row items-center justify-between w-1/6">
+            <div key={day.day} className={ index === days.length - 1 ? "flex flex-row justify-between text-lg font-bold py-3 " : "flex flex-row justify-between text-lg font-bold py-3 border-b-2 border-b-blue-300/10"}>
+              <div className="flex flex-row items-center justify-between xl:w-1/5 lg:w-1/4 w-1/3">
                 <div>{ day.day }</div>
                 <div>{ day.icon }</div>
               </div>
-              <div className="flex w-24 justify-between">
+              <div className="flex w-24 md:w-1/5 justify-between">
                 <span>{ day.low }</span>
                 <span>{ day.high }</span>
               </div>
@@ -32,7 +32,6 @@ const DailyWeather = () => {
           ))}
       </div>
     </div>
-
   )
 }
 

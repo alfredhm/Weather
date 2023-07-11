@@ -9,15 +9,15 @@ const HourlyWeather = () => {
         ["3pm", <IoIosCloud color={"white"}  size={25} />, "99°"],
         ["4pm", <IoIosRainy color={"white"}  size={30} />, "96°"],
         ["5pm", <IoIosThunderstorm color={"white"}  size={30} />, "95°"],
-        ["6pm", <IoIosThunderstorm color={"white"}  size={30} />, "95°"],
+        ["6pm", <IoIosSunny color={"white"}  size={30} />, "95°"],
         ["7pm", <IoIosCloud color={"white"}  size={25} />, "92°"],
         ["8pm", <IoIosRainy color={"white"}  size={30} />, "90°"]
     ]
   return (
-        <div className='backdrop-blur-xl py-5 rounded-xl'>
-        <ul className="list-none flex flex-row justify-around">
+        <div className='w-full backdrop-blur-xl py-5 rounded-xl'>
+        <ul className="list-none flex flex-row justify-start overflow-x-scroll ">
             {hours.map((hour) => (
-                <li key={hour[0]}>
+                <li key={hour[0]} className="w-full min-w-100px">
                     <div className="flex flex-col items-center justify-center">
                         <div>{hour[0]}</div>
                         <div>{hour[1]}</div>

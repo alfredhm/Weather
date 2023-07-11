@@ -1,19 +1,24 @@
 import React from 'react'
+import { IoIosThunderstorm } from "react-icons/io";
 
 const CurrentWeather = () => {
-
-    const url = "https://images2.minutemediacdn.com/image/upload/c_fill,w_1440,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/iStock-104472907-ec1d53a7c5724086414f13ae0dab8e1b.jpg"
+    const data = {
+        low: 80,
+        current: 86,
+        high: 97,
+        location: "Houston"
+    }
 
     return (
         <div className="flex items-center justify-center">
-            <div className="flex flex-col h-40 justify-center bg-cover bg-center rounded-xl backdrop-blur-xl font-semibold w-fit p-5">
+            <div className="flex flex-col h-40 items-center justify-center bg-cover bg-center rounded-xl backdrop-blur-xl font-semibold w-fit p-20">
                 <div className="flex flex-row justify-center gap-3">
-                    <p className="flex items-center">L:80°</p>
-                    <p className=" text-5xl">86°</p>
-                    <p className="flex items-center">H:97°</p>
+                    <p className="flex items-center">L:{ data.low }°</p>
+                    <p className=" md:text-5xl text-4xl">{ data.current }°</p>
+                    <p className="flex items-center">H:{ data.high }°</p>
                 </div>
                 <div className="text-center">
-                    <p className="text-4xl">Houston</p>
+                    <p className="md:text-4xl text-3xl">{ data.location }</p>
                 </div>
             </div>
         </div>
