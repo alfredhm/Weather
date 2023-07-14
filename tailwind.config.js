@@ -18,8 +18,12 @@ module.exports = {
         '3%': '3%'
       },
       minWidth: {
-        '100px': '100px'
+        '100px': '100px',
+        '70px': '70px'
       },
+      screens: {
+        'no-scroll': '1066px'
+      }
       
     },
   },

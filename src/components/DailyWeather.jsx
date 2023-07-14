@@ -16,10 +16,10 @@ const DailyWeather = () => {
   ]
 
   return (
-    <div className="backdrop-blur-lg px-4 rounded-xl w-full">
+    <div className="backdrop-blur-2xl px-4 rounded-xl w-full">
       <div className="flex flex-col last:border-none">
           {days.map((day, index) => (
-            <div key={day.day} className={ index === days.length - 1 ? "flex flex-row justify-between text-lg font-bold py-3 " : "flex flex-row justify-between text-lg font-bold py-3 border-b-2 border-b-blue-300/10"}>
+            <div key={index} className={ index === days.length - 1 ? "flex flex-row justify-between text-lg font-bold py-3 " : "flex flex-row justify-between text-lg font-bold py-3 border-b-2 border-b-blue-300/10"}>
               <div className="flex flex-row items-center justify-between xl:w-1/5 lg:w-1/4 w-1/3">
                 <div>{ day.day }</div>
                 <div>{ day.icon }</div>
