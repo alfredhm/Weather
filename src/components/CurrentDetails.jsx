@@ -6,7 +6,6 @@ import { WiHumidity } from 'react-icons/wi'
 import { MdVisibility } from 'react-icons/md'
 
 const CurrentDetails = (data) => {
-    console.log(data)
 
   const directionKey = (deg) => {
     if (deg < 10 && deg > 350) {
@@ -36,7 +35,7 @@ const CurrentDetails = (data) => {
                     <LiaTemperatureLowSolid size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="sm:text-xl text-l pl-1">Feels Like</p>
                 </div>
-                <p className="sm:text-5xl text-4xl">{parseInt(data.data.feelsLike)}°</p>
+                <p className="sm:text-5xl text-4xl">{parseInt(data.data.feelsLike)}&deg;</p>
             </div>
         </div>
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square">
@@ -56,7 +55,7 @@ const CurrentDetails = (data) => {
                     <p className="sm:text-xl text-l pl-1">Wind</p>
                 </div>
                 <p className="sm:text-5xl text-4xl">{directionKey(data.data.windDeg)}</p>
-                <p className="text-3xl">{Math.round(data.data.windSpeed)}</p>
+                <p className="text-3xl">{Math.round(parseFloat(data.data.windSpeed))} mph</p>
             </div> 
         </div>
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square">
@@ -74,7 +73,7 @@ const CurrentDetails = (data) => {
                     <MdVisibility size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="sm:text-xl text-l pl-1">Visibility</p>
                 </div>
-                <p className="sm:text-5xl text-4xl">{data.data.visibility} mi</p>
+                <p className="sm:text-5xl text-4xl">{Math.round(data.data.visibility * 0.000621)} mi</p>
             </div> 
         </div>
     </div>

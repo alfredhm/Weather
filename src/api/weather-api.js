@@ -2,104 +2,109 @@ import axios from "axios"
 
 const API_KEY = process.env.REACT_APP_API_KEY
 const BASE_URL = process.env.REACT_APP_BASE_URL
+const COORDS_URL = process.env.REACT_APP_COORDS_URL
+const ONE_CALL_URL = process.env.REACT_APP_ONE_CALL_URL
 
-const getWeatherData = (info, searchParams) => {
-    // console.log(BASE_URL + "/" + info + API_KEY)
-    // console.log(searchParams)
-    // const data = axios.get(BASE_URL + "/" + info, {
-        // params: {...searchParams, appid: API_KEY}
-    // })
-    // console.log(data)
-    
-    const data = {
-        "coord": {
-          "lon": 10.99,
-          "lat": 44.34
-        },
-        "weather": [
-          {
-            "id": 501,
-            "main": "Rain",
-            "description": "moderate rain",
-            "icon": "10d"
-          }
-        ],
-        "base": "stations",
-        "main": {
-          "temp": 77.59,
-          "feels_like": 78.06,
-          "temp_min": 75.94,
-          "temp_max": 80.42,
-          "pressure": 1015,
-          "humidity": 64,
-          "sea_level": 1015,
-          "grnd_level": 933
-        },
-        "visibility": 10000,
-        "wind": {
-          "speed": 0.62,
-          "deg": 349,
-          "gust": 1.18
-        },
-        "rain": {
-          "1h": 3.16
-        },
-        "clouds": {
-          "all": 100
-        },
-        "dt": 1661870592,
-        "sys": {
-          "type": 2,
-          "id": 2075663,
-          "country": "IT",
-          "sunrise": 1661834187,
-          "sunset": 1661882248
-        },
-        "timezone": 7200,
-        "id": 3163858,
-        "name": "Zocca",
-        "cod": 200
-    }   
+const getCoords = async (location) => {
+    const data = await axios.get(COORDS_URL, {
+        params: {q: location, limit: 1, appid: API_KEY}
+    })
+    return {lat: data.data[0].lat, lon: data.data[0].lon}
+}
+
+const getWeatherData = async (info, searchParams) => {
+    const data = axios.get(BASE_URL + "/" + info, {
+        params: {...searchParams, appid: API_KEY}
+    })
+
     return data
 }
 
 const formatCurrentWeather = (data) => {
     const {
         coord: {lat, lon},
-        main: {temp, feels_like, temp_min, temp_max, humidity},
+        main: {temp, temp_min, temp_max},
         name,
         dt,
-        sys: {country, sunrise, sunset},
-        weather,
-        wind: {speed, deg}
-    } = data
+        sys: {country},
+    } = data.data
 
-    const {main: details, icon} = weather[0]
 
     return {
         lat,
         lon, 
         temp, 
-        feels_like, 
         temp_min, 
-        temp_max, 
-        humidity, 
+        temp_max,  
         name, 
         dt, 
-        country, 
-        sunrise, 
-        sunset, 
-        details, 
-        icon, 
-        speed, 
-        deg 
+        country,  
+    }
+}
+
+const getOneCallData = async (lat, lon) => {
+    const data = await axios.get(ONE_CALL_URL, {
+        params: {units: "imperial", lat: lat, lon: lon, appid: API_KEY}
+    })
+    return data.data
+}
+
+const formatHourlyWeather = (data) => {
+    const hourly = []
+
+    for (let i = 0; i < 26; i++) {
+        const time = new Date(data.hourly[i].dt * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: true}).toLowerCase().replace(" ", "")
+        const temp = Math.round(parseFloat(data.hourly[i].temp))
+        const {
+            weather: [{
+                icon
+            }]
+        } = data.hourly[i]
+
+        const hour = {time, temp, icon}
+        hourly.push(hour)
+    }
+    return hourly
+}
+
+const formatDetails = (data) => {
+    const {
+        sunrise,
+        sunset,
+        feels_like,
+        pressure,
+        humidity,
+        uvi, 
+        visibility,
+        wind_speed,
+        wind_deg,
+        weather:[{
+            main,
+            description
+        }]
+    } = data.current
+
+    return {
+        sunrise,
+        sunset,
+        feels_like,
+        pressure,
+        humidity,
+        uvi, 
+        visibility,
+        wind_speed,
+        wind_deg,
+        main,
+        description
     }
 }
 
 const getFormattedWeatherData = async (searchParams) => {
-    const formattedCurrentWeather = /*await*/ getWeatherData('weather', searchParams)//.then(formatCurrentWeather)
-    const x = formatCurrentWeather(formattedCurrentWeather)
-    return x
+    const coords = await getCoords(searchParams.q)
+    const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
+    const formattedHourlyWeather = await getOneCallData(coords.lat, coords.lon).then(formatHourlyWeather)
+    const formattedDetails = await getOneCallData(coords.lat, coords.lon).then(formatDetails)
+    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, details: formattedDetails}
 }
 
 

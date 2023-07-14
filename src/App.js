@@ -13,7 +13,9 @@ import { useEffect, useState } from 'react'
 
 function App() {
    
-  const [data, setData] = useState({});
+  const [currentData, setCurrentData] = useState({});
+  const [hourlyData, setHourlyData] = useState([]);
+  const [details, setDetails] = useState({})
 
   const formatToCurrent = (data) => {
     return {
@@ -24,37 +26,42 @@ function App() {
     }
   }
 
-  const formatToDetails = (data) => {
+  const formatToDetails = (current) => {
     return {
-      feelsLike: data.feels_like,
-      uv: 0,
-      windSpeed: data.speed,
-      windDeg: data.deg,
-      humidity: data.humidity,
-      visibility: 15
+      feelsLike: current.feels_like,
+      uv: current.uvi,
+      windSpeed: current.wind_speed,
+      windDeg: current.wind_deg,
+      humidity: current.humidity,
+      visibility: current.visibility
     }
   }
 
   useEffect(() => {
     const getWeather = async () => {
       const data = await getFormattedWeatherData({ q: "houston", units: "imperial"})
-      console.log(new Date(data.sunrise * 1000).toLocaleDateString("en-US"), new Date(data.sunrise * 1000).toLocaleTimeString("en-US"))
-      setData(data)
-      console.log(data)
+      const currentData = data.current
+      const hourlyData = data.hourly
+      const details = data.details
+      setCurrentData(currentData)
+      setHourlyData(hourlyData)
+      setDetails(details)
     }
     getWeather()
   }, [])
   
+  console.log(hourlyData)
+  console.log(currentData)
 
   return (
     <div className="flex justify-center w-full h-full">
       <main className="fixed w-full h-full rounded-xl overflow-y-scroll">
         <div style={{ backgroundImage: `url(${clouds})` }} className="h-2screen flex flex-col items-center rounded-xl bg-bottom bg-cover bg-no-repeat pt-28 gap-5 bg-fixed z-10 w-inherit">
           <div className=" w-4/5 md:w-3/4 xl:w-1/2 flex flex-col gap-10">
-            <CurrentWeather data={formatToCurrent(data)}/>
-            <HourlyWeather />
+            <CurrentWeather data={formatToCurrent(currentData)}/>
+            <HourlyWeather data={hourlyData}/>
             <DailyWeather />
-            <CurrentDetails data={formatToDetails(data)}/>
+            <CurrentDetails data={formatToDetails(details)}/>
           </div>
         </div>
       </main>
