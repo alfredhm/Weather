@@ -2,7 +2,7 @@ import React from 'react'
 import { IoIosThunderstorm, IoIosCloud, IoIosRainy, IoIosSunny, IoIosMoon, IoIosCloudyNight, IoIosSnow } from "react-icons/io";
 import { IoPartlySunny } from 'react-icons/io5'
 import { BsCloudsFill } from 'react-icons/bs'
-import { LiaCloudSunRainSolid, LiaCloudMoonRainSolid } from 'react-icons/lia'
+import { FaCloudSunRain, FaCloudMoonRain } from 'react-icons/fa'
 import { TbMist } from 'react-icons/tb'
 
 const iconMap = new Map([
@@ -16,8 +16,8 @@ const iconMap = new Map([
     ["04n", <BsCloudsFill size={30} />],
     ["09d", <IoIosRainy size={30} />],
     ["09n", <IoIosRainy size={30} />],
-    ["10d", <LiaCloudSunRainSolid size={30} />],
-    ["10n", <LiaCloudMoonRainSolid size={30} />],
+    ["10d", <FaCloudSunRain size={30} />],
+    ["10n", <FaCloudMoonRain size={30} />],
     ["11d", <IoIosThunderstorm size={30} />],
     ["11n", <IoIosThunderstorm size={30} />],
     ["13d", <IoIosSnow size={30} />],

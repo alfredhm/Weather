@@ -27,8 +27,10 @@ const formatCurrentWeather = (data) => {
         name,
         dt,
         sys: {country},
+        weather
     } = data.data
 
+    const { icon } = weather[0]
 
     return {
         lat,
@@ -38,6 +40,7 @@ const formatCurrentWeather = (data) => {
         temp_max,  
         name, 
         dt, 
+        icon,
         country,  
     }
 }
@@ -65,6 +68,20 @@ const formatHourlyWeather = (data) => {
         hourly.push(hour)
     }
     return hourly
+}
+
+const formatDailyWeather = (data) => {
+    const daily = []
+
+    for (let i = 0; i < 8; i++) {
+        const weekday = new Date(data.daily[i].dt * 1000).toLocaleString("en-US", {weekday: 'short'})
+        const icon = data.daily[i].weather[0].icon
+        const { max, min } = data.daily[i].temp 
+
+        const day = {day: weekday, icon: icon, high: Math.round(parseFloat(max)), low: Math.round(parseFloat(min))}
+        daily.push(day)
+    }
+    return daily
 }
 
 const formatDetails = (data) => {
@@ -100,11 +117,13 @@ const formatDetails = (data) => {
 }
 
 const getFormattedWeatherData = async (searchParams) => {
+    console.log(searchParams.q)
     const coords = await getCoords(searchParams.q)
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
     const formattedHourlyWeather = await getOneCallData(coords.lat, coords.lon).then(formatHourlyWeather)
+    const formattedDailyWeather = await getOneCallData(coords.lat, coords.lon).then(formatDailyWeather) 
     const formattedDetails = await getOneCallData(coords.lat, coords.lon).then(formatDetails)
-    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, details: formattedDetails}
+    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails}
 }
 
 

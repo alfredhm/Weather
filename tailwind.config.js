@@ -22,7 +22,14 @@ module.exports = {
         '70px': '70px'
       },
       screens: {
-        'no-scroll': '1066px'
+        'no-scroll': '1066px',
+        'xs': '345px'
+      },
+      maxWidth: {
+        '200px': '200px'
+      },
+      minHeight: {
+        '60px': '60px'
       }
       
     },
