@@ -1,5 +1,6 @@
 // Utility
 import getFormattedWeatherData from './api/weather-api'
+import getBackground from './util/getBackground'
 
 // Components
 import CurrentDetails from './components/CurrentDetails'
@@ -8,7 +9,7 @@ import DailyWeather from './components/DailyWeather'
 import HourlyWeather from './components/HourlyWeather'
 
 // Icons/Images
-import clouds from './media/clouds.jpg'
+import houston from './media/houston.jpg'
 import { BiSolidError } from 'react-icons/bi'
 import { FaSearch } from'react-icons/fa'
 
@@ -16,7 +17,7 @@ import { FaSearch } from'react-icons/fa'
 import { useEffect, useState } from 'react'
 
 // Zod 
-import { FieldValues, useForm } from'react-hook-form'
+import { useForm } from'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -27,7 +28,9 @@ const schema = z.object({
 
 
 function App() {
-   
+
+  const [condID, setCondId] = useState(null); 
+  const [background, setBackground] = useState('')
   const [currentData, setCurrentData] = useState({});
   const [hourlyData, setHourlyData] = useState([]);
   const [dailyData, setDailyData] = useState([]);
@@ -41,10 +44,6 @@ function App() {
     formState: { errors },
     reset,
   } = useForm({ resolver: zodResolver(schema)})
-
-  const clearSearch = () => {
-    const search = document.querySelector()
-  }
 
   const onSubmit = (data) => {
     setLocation(data.location)
@@ -73,10 +72,23 @@ function App() {
     }
   }
 
+  const getDayOrNight = (data) => {
+    let isDay = true
+    const hour = parseInt(new Date(data.current.dt * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
+    const sunriseHour = parseInt(new Date(data.details.sunrise * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
+    const sunsetHour = parseInt(new Date(data.details.sunset * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
+
+    if (hour >= sunsetHour || hour <= sunriseHour) isDay = false
+    return isDay ? "day" : "night"
+  }
+
   useEffect(() => {
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({ q: location, units: "imperial"})
+        getDayOrNight(data)
+        setCondId(data.condId)
+        setBackground(getBackground(800, getDayOrNight(data)))
         setCurrentData(data.current)
         setHourlyData(data.hourly)
         setDailyData(data.daily)
@@ -97,7 +109,13 @@ function App() {
     <>
       <div className="flex justify-center w-full h-full">
         <main className="fixed w-full h-full overflow-y-scroll">
-          <div style={{ backgroundImage: `url(${clouds})` }} className="h-2screen flex flex-col items-center bg-bottom bg-cover bg-no-repeat pt-28 gap-5 bg-fixed z-10 w-inherit">
+          <div style={{ backgroundImage: `url(${houston})` }} className="h-2screen flex flex-col items-center bg-center bg-no-repeat pt-28 gap-5 bg-fixed z-10 w-inherit">
+            {error && 
+              <div className="rounded-xl h-5/6 w-1/2 absolute z-20 backdrop-blur-3xl flex items-center justify-center">
+                <BiSolidError size={100}/>
+                <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" : error}</p>
+              </div>
+            }
             <form onSubmit={handleSubmit(data => {
               onSubmit(data)
               reset()
@@ -107,15 +125,15 @@ function App() {
                   <div className="h-full aspect-square flex items-center justify-center">
                     <FaSearch size={20}/>
                   </div>
-                  <input id="search" {...register('location')} type="text" autoCorrect='false' autoComplete='false' autoFocus='true' placeholder='City, State, Country' className=" border-2 border-white/50 px-4 rounded-xl ml-2 h-10 w-full bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-sm placeholder:sm:text-base"/>
+                  <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" border-2 border-white/50 px-4 rounded-xl ml-2 h-10 w-full bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-sm placeholder:sm:text-base"/>
                   <div className="h-full aspect-square"></div>
                 </div>
               </div>
-              {error && <div className="text-center"><p>{error}</p></div>}
+              {errors.location && <div className="flex items-center justify-center w-full"><p className="backdrop-blur-xl">{errors.location.message}</p></div>}
 
             </form>
               <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 flex flex-col gap-10">
-                <CurrentWeather data={formatToCurrent(currentData)}/>
+                <CurrentWeather background={background} data={formatToCurrent(currentData)}/>
                 <HourlyWeather data={hourlyData}/>
                 <DailyWeather current={formatToCurrent(currentData)} daily={dailyData}/>
                 <CurrentDetails data={formatToDetails(details)}/>

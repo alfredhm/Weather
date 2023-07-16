@@ -116,14 +116,19 @@ const formatDetails = (data) => {
     }
 }
 
+const formatCondId = (data) => {
+    console.log(data.current.weather[0].id)
+    return data.current.weather[0].id
+}
+
 const getFormattedWeatherData = async (searchParams) => {
-    console.log(searchParams.q)
     const coords = await getCoords(searchParams.q)
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
     const formattedHourlyWeather = await getOneCallData(coords.lat, coords.lon).then(formatHourlyWeather)
     const formattedDailyWeather = await getOneCallData(coords.lat, coords.lon).then(formatDailyWeather) 
     const formattedDetails = await getOneCallData(coords.lat, coords.lon).then(formatDetails)
-    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails}
+    const condId = await(getOneCallData(coords.lat, coords.lon)).then(formatCondId)
+    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails, condId: condId}
 }
 
 
