@@ -31,13 +31,13 @@ const schema = z.object({
 function App() {
 
   const [condId, setCondId] = useState(800); 
-  const [background, setBackground] = useState('')
   const [currentData, setCurrentData] = useState({});
   const [hourlyData, setHourlyData] = useState([]);
   const [dailyData, setDailyData] = useState([]);
   const [details, setDetails] = useState({});
   const [error, setError] = useState('');
-  const [location, setLocation] = useState('houston')
+  const [location, setLocation] = useState('hawaii')
+  const [icon, setIcon] = useState('')
 
   const {
     register,
@@ -73,25 +73,12 @@ function App() {
     }
   }
 
-  const getDayOrNight = (data) => {
-    let isDay = true
-    const hour = parseInt(new Date(data.current.dt * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
-    const sunriseHour = parseInt(new Date(data.details.sunrise * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
-    const sunsetHour = parseInt(new Date(data.details.sunset * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
-
-    console.log(hour, sunriseHour, sunsetHour)
-    if (hour >= sunsetHour || hour <= sunriseHour) isDay = false
-    console.log(isDay)
-    return "day"
-    return isDay ? "day" : "night"
-  }
-
   useEffect(() => {
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({ q: location, units: "imperial"})
         setCondId(data.condId)
-        setBackground(GetBackground({condId: condId, dayOrNight: getDayOrNight(data)}))
+        setIcon(data.current.icon)
         setCurrentData(data.current)
         setHourlyData(data.hourly)
         setDailyData(data.daily)
@@ -106,13 +93,13 @@ function App() {
       }
     }
     getWeather(location)
-  }, [location, condId])
+  }, [location, icon])
 
   return (
     <>
       <div className="flex justify-center w-full h-full">
         <main className="fixed w-full h-fit overflow-y-scroll">
-          <GetBackground condId={condId} dayOrNight={background.data}/>
+          <GetBackground data={{cond: icon}}/>
           <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
             {error && 
               <div className="rounded-xl h-5/6 w-1/2 absolute z-20 backdrop-blur-3xl flex items-center justify-center">

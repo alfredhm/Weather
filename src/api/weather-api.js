@@ -9,19 +9,12 @@ const ONE_CALL_URL = process.env.REACT_APP_ONE_CALL_URL
 const getCoords = async (location) => {
     try {
         const data = await axios.get(COORDS_URL, {
-            params: {q: location, limit: 1, appid: API_KEY}
+            params: {q: location, limit: 1, appid: BACKUP_API_KEY}
         })
         return {lat: data.data[0].lat, lon: data.data[0].lon}
     } catch (err) {
-        try {
-            const data = await axios.get(COORDS_URL, {
-                params: {q: location, limit: 1, appid: BACKUP_API_KEY}
-            })
-            return {lat: data.data[0].lat, lon: data.data[0].lon}
-        } catch (err) {
-            console.log(err)
-            return err
-        }
+        console.log(err)
+        return err
     }
 
 }
@@ -29,38 +22,24 @@ const getCoords = async (location) => {
 const getWeatherData = async (info, searchParams) => {
     try {
         const data = await axios.get(BASE_URL + "/" + info, {
-            params: {...searchParams, appid: API_KEY}
+            params: {...searchParams, appid: BACKUP_API_KEY}
         })
         return data
     } catch (err) {
-        try {
-            const data = await axios.get(BASE_URL + "/" + info, {
-                params: {...searchParams, appid: BACKUP_API_KEY}
-            })
-            return data
-        } catch (err) {
-            console.log(err)
-            return err
-        }
+        console.log(err)
+        return err
     }
 }
 
 const getOneCallData = async (lat, lon) => {
     try {
-        const data =await axios.get(ONE_CALL_URL, {
-            params: {units: "imperial", lat: lat, lon: lon, appid: API_KEY}
+        const data = await axios.get(ONE_CALL_URL, {
+            params: {units: "imperial", lat: lat, lon: lon, appid: BACKUP_API_KEY}
         })
         return data.data
     } catch (err) {
-        try {
-            const data = await axios.get(ONE_CALL_URL, {
-                params: {units: "imperial", lat: lat, lon: lon, appid: BACKUP_API_KEY}
-            })
-            return data.data
-        } catch (err) {
-            console.log(err)
-            return err
-        }
+        console.log(err)
+        return err
     }
 }
 

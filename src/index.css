@@ -11,9 +11,6 @@ body {
     color: white;
 }
 
-video {
-  clip-path: inset(2px round 12px);
-}
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
