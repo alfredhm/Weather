@@ -23,7 +23,7 @@ module.exports = {
       },
       screens: {
         'no-scroll': '1066px',
-        'xs': '345px'
+        'xs': '390px'
       },
       maxWidth: {
         '200px': '200px'

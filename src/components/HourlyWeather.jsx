@@ -1,5 +1,5 @@
 import React from "react";
-import getIcon from "../util/getIcon";
+import getIcon from "../util/GetIcon";
 
 const HourlyWeather = (hours) => {
   return (

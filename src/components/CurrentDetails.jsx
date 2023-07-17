@@ -16,7 +16,7 @@ const CurrentDetails = (data) => {
   return (
     <div className="w-full grid justify-center grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="px-4 py-2 backdrop-blur-xl flex flex-col items-left justify-center ">
+            <div className="px-4 py-2 h-full backdrop-blur-xl flex flex-col items-left justify-start ">
                 <div className="flex flex-row items-center">
                     <LiaTemperatureLowSolid size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="text-xl xs:text-xs sm:text-xl pl-1">Feels Like</p>
@@ -25,7 +25,7 @@ const CurrentDetails = (data) => {
             </div>
         </div>
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="px-4 py-2 backdrop-blur-xl flex flex-col items-left justify-center ">
+            <div className="px-4 py-2 h-full backdrop-blur-xl flex flex-col items-left justify-start ">
                 <div className="flex flex-row items-center">
                     <IoIosSunny size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="text-xl xs:text-xs sm:text-xl pl-1">UV Index</p>
@@ -35,7 +35,7 @@ const CurrentDetails = (data) => {
             </div> 
         </div>         
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="px-4 py-2 backdrop-blur-xl flex flex-col items-left justify-center ">
+            <div className="px-4 py-2 h-full backdrop-blur-xl flex flex-col items-left justify-start ">
                 <div className="flex flex-row items-center">
                     <PiWindBold size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="text-xl xs:text-xs sm:text-xl pl-1">Wind</p>
@@ -45,7 +45,7 @@ const CurrentDetails = (data) => {
             </div> 
         </div>
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="px-4 py-2 backdrop-blur-xl flex flex-col items-left justify-center ">
+            <div className="px-4 py-2 h-full backdrop-blur-xl flex flex-col items-left justify-start ">
                 <div className="flex flex-row items-center">
                     <WiHumidity size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="text-xl xs:text-xs sm:text-xl pl-1">Humidity</p>
@@ -54,7 +54,7 @@ const CurrentDetails = (data) => {
             </div> 
         </div>
         <div className="backdrop-blur-2xl rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="px-4 py-2 backdrop-blur-xl flex flex-col items-left justify-center ">
+            <div className="px-4 py-2 h-full backdrop-blur-xl flex flex-col items-left justify-start ">
                 <div className="flex flex-row items-center">
                     <MdVisibility size={window.innerWidth > 425 ? 30 : 20}/>
                     <p className="text-xl xs:text-xs sm:text-xl pl-1">Visibility</p>

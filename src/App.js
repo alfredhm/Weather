@@ -1,6 +1,6 @@
 // Utility
 import getFormattedWeatherData from './api/weather-api'
-import getBackground from './util/getBackground'
+import GetBackground from './util/GetBackground'
 
 // Components
 import CurrentDetails from './components/CurrentDetails'
@@ -10,6 +10,7 @@ import HourlyWeather from './components/HourlyWeather'
 
 // Icons/Images
 import houston from './media/houston.jpg'
+import houstonNight from './media/houstonNight.jpg'
 import { BiSolidError } from 'react-icons/bi'
 import { FaSearch } from'react-icons/fa'
 
@@ -29,7 +30,7 @@ const schema = z.object({
 
 function App() {
 
-  const [condID, setCondId] = useState(null); 
+  const [condId, setCondId] = useState(800); 
   const [background, setBackground] = useState('')
   const [currentData, setCurrentData] = useState({});
   const [hourlyData, setHourlyData] = useState([]);
@@ -78,7 +79,10 @@ function App() {
     const sunriseHour = parseInt(new Date(data.details.sunrise * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
     const sunsetHour = parseInt(new Date(data.details.sunset * 1000).toLocaleTimeString("en-US", {hour: 'numeric', hour12: false}))
 
+    console.log(hour, sunriseHour, sunsetHour)
     if (hour >= sunsetHour || hour <= sunriseHour) isDay = false
+    console.log(isDay)
+    return "day"
     return isDay ? "day" : "night"
   }
 
@@ -86,9 +90,8 @@ function App() {
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({ q: location, units: "imperial"})
-        getDayOrNight(data)
         setCondId(data.condId)
-        setBackground(getBackground(800, getDayOrNight(data)))
+        setBackground(GetBackground({condId: condId, dayOrNight: getDayOrNight(data)}))
         setCurrentData(data.current)
         setHourlyData(data.hourly)
         setDailyData(data.daily)
@@ -103,13 +106,14 @@ function App() {
       }
     }
     getWeather(location)
-  }, [location])
+  }, [location, condId])
 
   return (
     <>
       <div className="flex justify-center w-full h-full">
-        <main className="fixed w-full h-full overflow-y-scroll">
-          <div style={{ backgroundImage: `url(${houston})` }} className="h-2screen flex flex-col items-center bg-center bg-no-repeat pt-28 gap-5 bg-fixed z-10 w-inherit">
+        <main className="fixed w-full h-fit overflow-y-scroll">
+          <GetBackground condId={condId} dayOrNight={background.data}/>
+          <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
             {error && 
               <div className="rounded-xl h-5/6 w-1/2 absolute z-20 backdrop-blur-3xl flex items-center justify-center">
                 <BiSolidError size={100}/>
@@ -120,12 +124,12 @@ function App() {
               onSubmit(data)
               reset()
             })} className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 backdrop-blur-xl rounded-xl">
-              <div className="border-2 border-white/50 bg-zinc-400/30 min-h-60px relative flex flex-col items-center justify-center rounded-xl px-8">
+              <div className="border-2 border-white/50 bg-zinc-400/30 min-h-60px relative flex flex-col items-center justify-center rounded-xl px-3 sm:px-6 md:px-8">
                 <div className="flex flex-row items-center justify-center w-full h-full">
                   <div className="h-full aspect-square flex items-center justify-center">
                     <FaSearch size={20}/>
                   </div>
-                  <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" border-2 border-white/50 px-4 rounded-xl ml-2 h-10 w-full bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-sm placeholder:sm:text-base"/>
+                  <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" border-2 border-white/50 px-4 rounded-xl ml-2 h-10 w-full bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
                   <div className="h-full aspect-square"></div>
                 </div>
               </div>
@@ -133,7 +137,7 @@ function App() {
 
             </form>
               <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 flex flex-col gap-10">
-                <CurrentWeather background={background} data={formatToCurrent(currentData)}/>
+                <CurrentWeather background={houstonNight} data={formatToCurrent(currentData)}/>
                 <HourlyWeather data={hourlyData}/>
                 <DailyWeather current={formatToCurrent(currentData)} daily={dailyData}/>
                 <CurrentDetails data={formatToDetails(details)}/>
