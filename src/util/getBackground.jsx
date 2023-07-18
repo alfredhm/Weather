@@ -38,8 +38,8 @@ const setPlayback = () => {
 
 const GetBackground = (data) => {
   return (
-    <video onPlay={setPlayback} key={backgroundMap.get(data.data.cond)} className="w-screen h-2screen object-cover inset-0 absolute bg-top" autoPlay={true} loop={true} muted={true} playsInline={true}>
-        <source src={backgroundMap.get(data.data.cond)} type="video/mp4" className=" scale-100" />
+    <video onPlay={setPlayback} key={backgroundMap.get(data.data.cond)} className="w-screen h-2screen object-cover inset-0 absolute" autoPlay={true} loop={true} muted={true} playsInline={true}>
+        <source src={backgroundMap.get(data.data.cond)} type="video/mp4" />
     </video>
   )
 }

@@ -30,7 +30,6 @@ const schema = z.object({
 
 function App() {
 
-  const [condId, setCondId] = useState(800); 
   const [currentData, setCurrentData] = useState({});
   const [hourlyData, setHourlyData] = useState([]);
   const [dailyData, setDailyData] = useState([]);
@@ -77,7 +76,6 @@ function App() {
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({ q: location, units: "imperial"})
-        setCondId(data.condId)
         setIcon(data.current.icon)
         setCurrentData(data.current)
         setHourlyData(data.hourly)
@@ -97,8 +95,8 @@ function App() {
 
   return (
     <>
-      <div className="flex justify-center w-full h-full">
-        <main className="fixed w-full h-fit overflow-y-scroll">
+      <div className="flex justify-center w-full h-2screen">
+        <main className=" w-full h-inherit overflow-y-scroll">
           <GetBackground data={{cond: icon}}/>
           <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
             {error && 
@@ -124,7 +122,7 @@ function App() {
 
             </form>
               <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 flex flex-col gap-10">
-                <CurrentWeather background={houstonNight} data={formatToCurrent(currentData)}/>
+                <CurrentWeather background={houston} data={formatToCurrent(currentData)}/>
                 <HourlyWeather data={hourlyData}/>
                 <DailyWeather current={formatToCurrent(currentData)} daily={dailyData}/>
                 <CurrentDetails data={formatToDetails(details)}/>
