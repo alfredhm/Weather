@@ -1,6 +1,7 @@
 // Utility
 import getFormattedWeatherData from './api/weather-api'
 import GetBackground from './util/GetBackground'
+import placesAPI from './api/places-api'
 
 // Components
 import CurrentDetails from './components/CurrentDetails'
@@ -15,12 +16,14 @@ import { BiSolidError } from 'react-icons/bi'
 import { FaSearch } from'react-icons/fa'
 
 // ReactJS
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 // Zod 
 import { useForm } from'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+// Other libraries
 
 
 const schema = z.object({
@@ -37,6 +40,8 @@ function App() {
   const [error, setError] = useState('');
   const [location, setLocation] = useState('hawaii')
   const [icon, setIcon] = useState('')
+  const [searches, setSearches] = useState([])
+  const [results, setResults] = useState(false)
 
   const {
     register,
@@ -69,6 +74,22 @@ function App() {
       windDeg: current.wind_deg,
       humidity: current.humidity,
       visibility: current.visibility
+    }
+  }
+
+  let searchRef = useRef(searches)
+
+  const handleChange = async (query) => {
+    if (query === "") {
+      setResults(false)
+      
+    } else {
+      const input = await placesAPI(query)
+      setSearches(input)
+      setResults(true)
+      searchRef.current = input
+      console.log(searchRef.current)
+      console.log(input)
     }
   }
 
@@ -105,19 +126,31 @@ function App() {
                 <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" : error}</p>
               </div>
             }
-            <form onSubmit={handleSubmit(data => {
-              onSubmit(data)
-              reset()
+            <form
+              onChange={(event) => handleChange(event.target.value)}
+              onSubmit={handleSubmit(data => {
+                onSubmit(data)
+                reset()
+                setResults(false)
             })} className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 backdrop-blur-xl rounded-xl">
-              <div className="border-2 border-white/50 bg-zinc-400/30 min-h-60px relative flex flex-col items-center justify-center rounded-xl px-3 sm:px-6 md:px-8">
-                <div className="flex flex-row items-center justify-center w-full h-full">
-                  <div className="h-full aspect-square flex items-center justify-center">
-                    <FaSearch size={20}/>
+              <div className="border-2 border-white/50 bg-zinc-400/30 min-h-60px relative flex flex-col items-center justify-center rounded-xl px-3 py-2 sm:px-6 md:px-8">
+                  <div className="border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-xl">
+                    <div className="w-full flex items-center pl-5 py-1">
+                      <FaSearch size={20}/>
+                      <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" rounded-xl ml-2 h-10  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
+                    </div>
+                    {results && 
+                    <div className="w-full">
+                      <ul className="flex flex-col justify-start w-full">
+                        {searches.map((search, index) => (
+                          <li key={index} className="py-2 border-y-2 pl-5 border-white/30 hover:bg-zinc-400/40">{search.description}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    }
                   </div>
-                  <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" border-2 border-white/50 px-4 rounded-xl ml-2 h-10 w-full bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
-                  <div className="h-full aspect-square"></div>
-                </div>
               </div>
+
               {errors.location && <div className="flex items-center justify-center w-full"><p className="backdrop-blur-xl">{errors.location.message}</p></div>}
 
             </form>

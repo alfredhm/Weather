@@ -13,8 +13,8 @@ import Rain from "../media/gifs/Rain.mp4"
 const backgroundMap = new Map([
   ["01d", Day],
   ["01n", Night],
-  ["02d", DayCloudy],
-  ["02n", NightCloudy],
+  ["02d", Day],
+  ["02n", Night],
   ["03d", DayCloudy],
   ["03n", NightCloudy],
   ["04d", DayCloudy],
