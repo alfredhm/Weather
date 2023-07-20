@@ -1,4 +1,8 @@
 import axios from "axios"
+import placesAPI from "./places-api"
+import coordsAPI from "./coords-api"
+import referenceAPI from "./reference-api"
+import getImage from "./image-api"
 
 const API_KEY = process.env.REACT_APP_API_KEY
 const BACKUP_API_KEY = process.env.REACT_APP_BACKUP_API_KEY
@@ -8,10 +12,10 @@ const ONE_CALL_URL = process.env.REACT_APP_ONE_CALL_URL
 
 const getCoords = async (location) => {
     try {
-        const data = await axios.get(COORDS_URL, {
-            params: {q: location, limit: 1, appid: BACKUP_API_KEY}
-        })
-        return {lat: data.data[0].lat, lon: data.data[0].lon}
+        const fullLocation = await placesAPI(location)
+        const placeId = fullLocation[0].place_id
+        const coords = await coordsAPI(placeId)
+        return {lat: coords.lat, lon: coords.lon, placeId: placeId}
     } catch (err) {
         console.log(err)
         return err
@@ -26,8 +30,17 @@ const getWeatherData = async (info, searchParams) => {
         })
         return data
     } catch (err) {
-        console.log(err)
-        return err
+        try {
+            const coords = await getCoords(searchParams.q)
+            const {q, ...params} = searchParams
+            const data = await axios.get(BASE_URL + "/" + info, {
+                params: {...params, lat: coords.lat, lon: coords.lon, appid: BACKUP_API_KEY}
+            })
+            return data
+        } catch (err) {
+            console.log(err)
+            return err
+        }
     }
 }
 
@@ -137,13 +150,15 @@ const formatCondId = (data) => {
 
 const getFormattedWeatherData = async (searchParams) => {
     const coords = await getCoords(searchParams.q)
+    const test = await referenceAPI(coords.placeId)
+    const image = await getImage(test)
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
     const oneCallData = await getOneCallData(coords.lat, coords.lon)
     const formattedDailyWeather = formatDailyWeather(oneCallData) 
     const formattedHourlyWeather = formatHourlyWeather(oneCallData) 
     const formattedDetails = formatDetails(oneCallData) 
     const condId = formatCondId(oneCallData)
-    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails, condId: condId}
+    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails, condId: condId, currentBackground: image.props.src }
 }
 
 

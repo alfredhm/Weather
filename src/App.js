@@ -2,33 +2,22 @@
 import getFormattedWeatherData from './api/weather-api'
 import GetBackground from './util/GetBackground'
 import placesAPI from './api/places-api'
+import referenceAPI from './api/reference-api'
+import cityAPI from './api/city-api'
 
 // Components
 import CurrentDetails from './components/CurrentDetails'
 import CurrentWeather from './components/CurrentWeather'
 import DailyWeather from './components/DailyWeather'
 import HourlyWeather from './components/HourlyWeather'
+import SearchForm from './components/SearchForm'
 
 // Icons/Images
-import houston from './media/houston.jpg'
-import houstonNight from './media/houstonNight.jpg'
 import { BiSolidError } from 'react-icons/bi'
-import { FaSearch } from'react-icons/fa'
+
 
 // ReactJS
 import { useEffect, useState, useRef } from 'react'
-
-// Zod 
-import { useForm } from'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-
-// Other libraries
-
-
-const schema = z.object({
-  location: z.string().min(3, { message: "Location Input Must Have 3 Characters"})
-})
 
 
 function App() {
@@ -38,22 +27,12 @@ function App() {
   const [dailyData, setDailyData] = useState([]);
   const [details, setDetails] = useState({});
   const [error, setError] = useState('');
-  const [location, setLocation] = useState('hawaii')
+  const [location, setLocation] = useState('houston')
   const [icon, setIcon] = useState('')
   const [searches, setSearches] = useState([])
   const [results, setResults] = useState(false)
+  const [currentBackground, setCurrentBackground] = useState()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({ resolver: zodResolver(schema)})
-
-  const onSubmit = (data) => {
-    setLocation(data.location)
-    
-  }
 
   const formatToCurrent = (data) => {
     return {
@@ -78,6 +57,11 @@ function App() {
   }
 
   let searchRef = useRef(searches)
+  let backgroundRef = useRef(currentBackground)
+
+  const handleSubmit = async (data) => {
+    setLocation(data)
+  }
 
   const handleChange = async (query) => {
     if (query === "") {
@@ -85,11 +69,10 @@ function App() {
       
     } else {
       const input = await placesAPI(query)
+      const reference = await referenceAPI()
       setSearches(input)
       setResults(true)
       searchRef.current = input
-      console.log(searchRef.current)
-      console.log(input)
     }
   }
 
@@ -102,6 +85,7 @@ function App() {
         setHourlyData(data.hourly)
         setDailyData(data.daily)
         setDetails(data.details)
+        setCurrentBackground(data.currentBackground)
         setError('')
       } catch (err) {
         if (err.message === "Cannot read properties of undefined (reading 'lat')") {
@@ -123,39 +107,19 @@ function App() {
             {error && 
               <div className="rounded-xl h-5/6 w-1/2 absolute z-20 backdrop-blur-3xl flex items-center justify-center">
                 <BiSolidError size={100}/>
-                <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" : error}</p>
+                <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" :  error.includes("'data.data' as it is undefined") ? "No Matching Location" : error}</p>
               </div>
             }
-            <form
-              onChange={(event) => handleChange(event.target.value)}
-              onSubmit={handleSubmit(data => {
-                onSubmit(data)
-                reset()
+            <SearchForm onSubmit={(location) => {
+                handleSubmit(location)
                 setResults(false)
-            })} className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 backdrop-blur-xl rounded-xl">
-              <div className="border-2 border-white/50 bg-zinc-400/30 min-h-60px relative flex flex-col items-center justify-center rounded-xl px-3 py-2 sm:px-6 md:px-8">
-                  <div className="border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-xl">
-                    <div className="w-full flex items-center pl-5 py-1">
-                      <FaSearch size={20}/>
-                      <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" autoFocus={true} placeholder='City, State, Country' className=" rounded-xl ml-2 h-10  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
-                    </div>
-                    {results && 
-                    <div className="w-full">
-                      <ul className="flex flex-col justify-start w-full">
-                        {searches.map((search, index) => (
-                          <li key={index} className="py-2 border-y-2 pl-5 border-white/30 hover:bg-zinc-400/40">{search.description}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    }
-                  </div>
-              </div>
-
-              {errors.location && <div className="flex items-center justify-center w-full"><p className="backdrop-blur-xl">{errors.location.message}</p></div>}
-
-            </form>
+              }} 
+              onChange={(data) => handleChange(data)} 
+              searches={searches}
+              results={results}
+            />
               <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 flex flex-col gap-10">
-                <CurrentWeather background={houston} data={formatToCurrent(currentData)}/>
+                <CurrentWeather background={currentBackground} data={formatToCurrent(currentData)}/>
                 <HourlyWeather data={hourlyData}/>
                 <DailyWeather current={formatToCurrent(currentData)} daily={dailyData}/>
                 <CurrentDetails data={formatToDetails(details)}/>

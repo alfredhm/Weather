@@ -11,7 +11,7 @@ const CurrentWeather = ( props ) => {
                         <p className="flex items-center sm:base text-sm ">H:{ parseInt(props.data.high)}&deg;</p>
                     </div>
                     <div className="text-center">
-                        <p className=" md:text-4xl text-3xl pr-2 sm:pr-4">{ props.data.location }</p>
+                        <p className=" md:text-4xl sm:text-3xl xs:text-2xl text-l pr-2 sm:pr-4">{ props.data.location }</p>
                     </div>
                 </div>
             </div>
