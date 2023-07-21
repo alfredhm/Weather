@@ -4,7 +4,7 @@ import axios from 'axios'
 const findLargest = (images) => {
     let max = images[0]
     for (let i = 0; i < images.length; i++) {
-        if (images[i].height > max.height) {
+        if (images[i].width > max.width) {
             max = images[i]
         } 
     }

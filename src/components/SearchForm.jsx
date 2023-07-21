@@ -36,7 +36,7 @@ const SearchForm = ({onSubmit, onChange, searches, results}) => {
             <div className="border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-xl">
             <div className="flex items-center justify-start ml-5 my-1 w-full">
                 <FaSearch size={20}/>
-                <input id="search" {...register('location')} type="text" autoCorrect="false" autoComplete="false" onFocus={() => console.log()} autoFocus={true} placeholder='City, State, Country' className="w-3/5 rounded-xl ml-2 h-10  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
+                <input type="search" id="search" {...register('location')} autoCorrect="off" autoComplete="off" onFocus={() => console.log()} autoFocus={true} placeholder='City, State, Country' className="w-3/5 rounded-xl ml-2 h-10  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
             </div>
             {results && 
             <div className="w-full">

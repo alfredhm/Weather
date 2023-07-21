@@ -19,6 +19,7 @@ async function getImage(photo_reference) {
             console.log(error)
         }
         console.log(error.config)
+        return null
     }
 }
 

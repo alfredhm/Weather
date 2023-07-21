@@ -26,7 +26,6 @@ const iconMap = new Map([
     ["50n", <TbMist size={ window.innerWidth > 389 ? 30 : 25 } />],
 ])
 
-
 const getIcon = (code) => {
   return (
     <div>
