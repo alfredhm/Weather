@@ -31,12 +31,11 @@ const SearchForm = ({onSubmit, onChange, searches, results}) => {
         onSubmit={handleSubmit((data) => {
           onSubmit(data.location)
           reset()
-    })} className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 backdrop-blur-xl rounded-xl">
-        <div className="border-2 border-white/50 backdrop-blur-xl min-h-60px relative flex flex-col items-center justify-center rounded-xl px-3 py-2 sm:px-6 md:px-8">
-            <div className="border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-xl">
+    })} className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 backdrop-blur-xl rounded-full">
+          <div className={ results ? "border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-3xl" : "border-2 border-white/50 flex flex-col items-center justify-center w-full h-full rounded-full"}>
             <div className="flex items-center justify-start ml-5 my-1 w-full">
-                <FaSearch size={20}/>
-                <input type="search" id="search" {...register('location')} autoCorrect="off" autoComplete="off" onFocus={() => console.log()} autoFocus={true} placeholder='City, State, Country' className="w-3/5 rounded-xl ml-2 h-10  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
+                <FaSearch className="ml-3" size={20}/>
+                <input type="search" id="search" {...register('location')} autoCorrect="off" autoComplete="off" autoFocus={true} placeholder='City, State, Country' className="w-3/5 rounded-xl ml-5 h-9  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"/>
             </div>
             {results && 
             <div className="w-full">
@@ -52,13 +51,11 @@ const SearchForm = ({onSubmit, onChange, searches, results}) => {
                           {search.description}
                         </li>
                     </div>
-
                 ))}
                 </ul>
             </div>
             }
-            </div>
-        </div>
+          </div>
         {errors.location && <div className="flex items-center justify-center w-full"><p className="backdrop-blur-xl">{errors.location.message}</p></div>}
     </form>
   )

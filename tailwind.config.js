@@ -8,7 +8,7 @@ module.exports = {
         '2screen': '200vh'
       },
       width: {
-        '101': '850px'
+        '101': '850px',
       },
       boxShadow: {
         'added': "0 0 1rem 0 rgba(0, 0, 0, .2)",
@@ -23,7 +23,8 @@ module.exports = {
       },
       screens: {
         'no-scroll': '1066px',
-        'xs': '390px'
+        'xs': '390px',
+        'details': '520px',
       },
       maxWidth: {
         '200px': '200px'

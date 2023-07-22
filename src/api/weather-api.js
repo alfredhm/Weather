@@ -101,17 +101,20 @@ const formatHourlyWeather = (data) => {
 
 const formatDailyWeather = (data) => {
     const daily = []
-
+    const isDay = data.hourly[0].weather[0].icon.includes('d')
     for (let i = 0; i < 8; i++) {
         const weekday = new Date(data.daily[i].dt * 1000).toLocaleString("en-US", {weekday: 'short', timeZone: data.timezone})
         const icon = data.daily[i].weather[0].icon
         const { max, min } = data.daily[i].temp 
         const pop = parseInt(data.daily[i].pop * 100)
-
         const day = {day: weekday, icon: icon, high: Math.round(parseFloat(max)), low: Math.round(parseFloat(min)), pop: pop}
         daily.push(day)
     }
-    return daily
+    const dailyData = {
+        daily: daily,
+        isDay: isDay
+    }
+    return dailyData
 }
 
 const formatDetails = (data) => {
@@ -159,11 +162,13 @@ const getFormattedWeatherData = async (searchParams) => {
     }
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
     const oneCallData = await getOneCallData(coords.lat, coords.lon)
-    const formattedDailyWeather = formatDailyWeather(oneCallData) 
+    const formattedDailyWeatherData = formatDailyWeather(oneCallData) 
+    const formattedDailyWeather = formattedDailyWeatherData.daily 
+    const isDay = formattedDailyWeatherData.isDay
     const formattedHourlyWeather = formatHourlyWeather(oneCallData) 
     const formattedDetails = formatDetails(oneCallData) 
     const condId = formatCondId(oneCallData)
-    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, daily: formattedDailyWeather, details: formattedDetails, condId: condId, currentBackground: reference ? image.props.src : image}
+    return { current: formattedCurrentWeather, hourly: formattedHourlyWeather, isDay: isDay, daily: formattedDailyWeather, details: formattedDetails, condId: condId, currentBackground: reference ? image.props.src : image}
 }
 
 

@@ -1,9 +1,8 @@
 // Utility
 import getFormattedWeatherData from './api/weather-api'
-import GetBackground from './util/GetBackground'
+import GetBackground from './components/GetBackground'
 import placesAPI from './api/places-api'
-import referenceAPI from './api/reference-api'
-import cityAPI from './api/city-api'
+import { formatToCurrent, formatToDetails }  from './util/formats'
 
 // Components
 import CurrentDetails from './components/CurrentDetails'
@@ -32,32 +31,12 @@ function App() {
   const [searches, setSearches] = useState([])
   const [results, setResults] = useState(false)
   const [currentBackground, setCurrentBackground] = useState()
+  const [isDay, setIsDay] = useState(false)
 
 
-  const formatToCurrent = (data) => {
-    return {
-      low: data.temp_min, 
-      curr: data.temp, 
-      high: data.temp_max, 
-      location: data.name,
-      icon: data.icon,
-      // day: new Date(data.dt).toLocaleString(window.navigator.language, {weekday: 'short'})
-    }
-  }
 
-  const formatToDetails = (current) => {
-    return {
-      feelsLike: current.feels_like,
-      uv: current.uvi,
-      windSpeed: current.wind_speed,
-      windDeg: current.wind_deg,
-      humidity: current.humidity,
-      visibility: current.visibility
-    }
-  }
 
   let searchRef = useRef(searches)
-  let backgroundRef = useRef(currentBackground)
 
   const handleSubmit = async (data) => {
     setLocation(data)
@@ -69,7 +48,6 @@ function App() {
       
     } else {
       const input = await placesAPI(query)
-      const reference = await referenceAPI()
       setSearches(input)
       setResults(true)
       searchRef.current = input
@@ -87,6 +65,7 @@ function App() {
         setDetails(data.details)
         setCurrentBackground(data.currentBackground)
         setError('')
+        setIsDay(data.isDay)
       } catch (err) {
         if (err.message === "Cannot read properties of undefined (reading 'lat')") {
           setError("No Location Found")
@@ -110,19 +89,19 @@ function App() {
                 <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" :  error.includes("'data.data' as it is undefined") ? "No Matching Location" : error}</p>
               </div>
             }
-            <SearchForm onSubmit={(location) => {
-                handleSubmit(location)
+            <SearchForm onSubmit={async (location) => {
+                await handleSubmit(location)
                 setResults(false)
               }} 
-              onChange={(data) => handleChange(data)} 
+              onChange={async (data) => await handleChange(data)} 
               searches={searches}
               results={results}
             />
-              <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2  2xl:w-1/3 flex flex-col gap-10">
+              <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
                 <CurrentWeather background={currentBackground} data={formatToCurrent(currentData)}/>
-                <HourlyWeather data={hourlyData}/>
-                <DailyWeather current={formatToCurrent(currentData)} daily={dailyData}/>
-                <CurrentDetails data={formatToDetails(details)}/>
+                <HourlyWeather isDay={isDay} data={hourlyData}/>
+                <DailyWeather isDay={isDay} current={formatToCurrent(currentData)} daily={dailyData}/>
+                <CurrentDetails isDay={isDay} data={formatToDetails(details)}/>
               </div>
           </div>
         </main>
