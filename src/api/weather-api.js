@@ -44,10 +44,10 @@ const getWeatherData = async (info, searchParams) => {
     }
 }
 
-const getOneCallData = async (lat, lon) => {
+const getOneCallData = async (lat, lon, units) => {
     try {
         const data = await axios.get(ONE_CALL_URL, {
-            params: {units: "imperial", lat: lat, lon: lon, appid: BACKUP_API_KEY}
+            params: {units: units, lat: lat, lon: lon, appid: BACKUP_API_KEY}
         })
         return data.data
     } catch (err) {
@@ -161,7 +161,7 @@ const getFormattedWeatherData = async (searchParams) => {
         image = await getImage(reference)
     }
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather)
-    const oneCallData = await getOneCallData(coords.lat, coords.lon)
+    const oneCallData = await getOneCallData(coords.lat, coords.lon, searchParams.units)
     const formattedDailyWeatherData = formatDailyWeather(oneCallData) 
     const formattedDailyWeather = formattedDailyWeatherData.daily 
     const isDay = formattedDailyWeatherData.isDay

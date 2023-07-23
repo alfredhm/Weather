@@ -21,7 +21,7 @@ const CurrentDetails = (data) => {
                     <LiaTemperatureLowSolid size={window.innerWidth > 767 ? 30 : 20}/>
                     <p className="text-xs md:text-xl pl-1">Feels Like</p>
                 </div>
-                <p className="text-xl xs:text-2xl">{Math.round(parseInt(data.data.feelsLike))}&deg;</p>
+                <p className="text-xl xs:text-3xl">{Math.round(parseInt(data.data.feelsLike))}&deg;</p>
             </div>
         </div>
         <div style={data.isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
@@ -30,8 +30,8 @@ const CurrentDetails = (data) => {
                     <IoIosSunny size={window.innerWidth > 767 ? 30 : 20}/>
                     <p className="text-xs md:text-xl pl-1">UV Index</p>
                 </div>
-                <p className="text-xl xs:text-2xl">{Math.round(parseFloat(data.data.uv))}</p>
-                <p className="text-xs xs:text-2xl">{ data.data.uv < 4 ? "Low" : data.data.uv > 6 ? "High" : "Med"}</p>
+                <p className="text-xl xs:text-3xl">{Math.round(parseFloat(data.data.uv))}</p>
+                <p className="text-xs xs:text-xl">{ data.data.uv < 4 ? "Low" : data.data.uv > 6 ? "High" : "Med"}</p>
             </div> 
         </div>         
         <div style={data.isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
@@ -40,8 +40,8 @@ const CurrentDetails = (data) => {
                     <PiWindBold size={window.innerWidth > 767 ? 30 : 20}/>
                     <p className="text-xs md:text-xl pl-1">Wind</p>
                 </div>
-                <p className="text-xl xs:text-2xl">{directionKey(parseInt(data.data.windDeg))}</p>
-                <p className="text-xs xs:text-2xl font-light ">{Math.round(parseFloat(data.data.windSpeed))} mph</p>
+                <p className="text-xl xs:text-3xl">{directionKey(parseInt(data.data.windDeg))}</p>
+                <p className="text-xs xs:text-xl font-light ">{Math.round(parseFloat(data.data.windSpeed))} {data.isImperial ? "mph" : "kph"}</p>
             </div> 
         </div>
         <div style={data.isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
@@ -50,7 +50,7 @@ const CurrentDetails = (data) => {
                     <WiHumidity size={window.innerWidth > 767 ? 30 : 20}/>
                     <p className="text-xs md:text-xl pl-1">Humidity</p>
                 </div>
-                <p className="text-xl xs:text-2xl">{data.data.humidity}%</p>
+                <p className="text-xl xs:text-3xl">{data.data.humidity}%</p>
             </div> 
         </div>
         <div style={data.isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
@@ -60,8 +60,8 @@ const CurrentDetails = (data) => {
                     <p className="text-xs md:text-xl pl-1">Visibility</p>
                 </div>
                 <div className="flex flex-row md:gap-2 gap-1 items-end">
-                    <p className="text-xl xs:text-2xl">{Math.round(data.data.visibility * 0.000621)}</p>
-                    <p className="text-xs xs:text-2xl font-light ">miles</p>
+                    <p className="text-xl xs:text-3xl">{ data.isImperial ? (Math.round(data.data.visibility * 0.000621)) : (Math.round(data.data.visibility * 0.001))}</p>
+                    <p className="text-xs xs:text-xl font-light ">{data.isImperial ? "mi" : "km"}</p>
                 </div>
             </div> 
         </div>

@@ -25,6 +25,7 @@ function App() {
   const [hourlyData, setHourlyData] = useState([]);
   const [dailyData, setDailyData] = useState([]);
   const [details, setDetails] = useState({});
+  const [isImperial, setIsImperial] = useState('imperial')
   const [error, setError] = useState('');
   const [location, setLocation] = useState('houston')
   const [icon, setIcon] = useState('')
@@ -35,6 +36,13 @@ function App() {
 
 
 
+  const handleClose = () => {
+    setError('')
+    const cover = document.querySelector("#app-cover")
+    const modal = document.querySelector("#error-modal")
+    cover.style.display = "none"
+    modal.style.display = "none"
+  }
 
   let searchRef = useRef(searches)
 
@@ -43,21 +51,29 @@ function App() {
   }
 
   const handleChange = async (query) => {
+    const input = await placesAPI(query)
     if (query === "") {
       setResults(false)
       
+    } else if (input === "") {
+      setResults(false)
+      setError("No Search Results")
     } else {
-      const input = await placesAPI(query)
       setSearches(input)
       setResults(true)
       searchRef.current = input
     }
   }
 
+  const handleUnitClick = () => {
+    setIsImperial(!isImperial)
+  }
+
   useEffect(() => {
     const getWeather = async () => {
       try {
-        const data = await getFormattedWeatherData({ q: location, units: "imperial"})
+        const data = await getFormattedWeatherData({ q: location, units: isImperial ? "imperial" : "metric"})
+        console.log(data)
         setIcon(data.current.icon)
         setCurrentData(data.current)
         setHourlyData(data.hourly)
@@ -75,18 +91,27 @@ function App() {
       }
     }
     getWeather(location)
-  }, [location, icon])
+  }, [location, icon, isImperial])
 
   return (
     <>
       <div className="flex justify-center w-full h-2screen">
-        <main className=" w-full h-inherit overflow-y-scroll">
+        <button className="z-10" onClick={handleUnitClick}>Change Units</button>
+        { error && <div id="app-cover" className="w-full h-2screen absolute z-20 backdrop-blur-3xl"></div>}
+        <main className="w-full h-inherit overflow-y-scroll">
           <GetBackground data={{cond: icon}}/>
           <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
             {error && 
-              <div className="rounded-xl h-5/6 w-1/2 absolute z-20 backdrop-blur-3xl flex items-center justify-center">
-                <BiSolidError size={100}/>
-                <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" :  error.includes("'data.data' as it is undefined") ? "No Matching Location" : error}</p>
+              <div id="error-modal" className="border-2 border-white/50 rounded-xl 2xl:h-5/6 2xl:w-1/2 xl:h-1/2 xl:w-2/3 absolute z-30 backdrop-blur-3xl flex flex-col items-center justify-center">
+                <div className="h-2/5 w-full flex flex-col items-end px-3">
+                  <p onClick={() => handleClose()} className="text-5xl hover:text-white/50 hover:cursor-pointer">&times;</p>
+                </div>
+                <div className="h-3/5 flex flex-row items-start justify-start">
+                  <div className="flex flex-row items-center">
+                    <BiSolidError size={100}/>
+                    <p className="text-6xl font-extrabold pl-4" >{error.includes('429') ? "Out Of API Calls" :  error.includes("'data.data' as it is undefined") ? "No Matching Location" : error}</p>
+                  </div>
+                </div>
               </div>
             }
             <SearchForm onSubmit={async (location) => {
@@ -101,7 +126,7 @@ function App() {
                 <CurrentWeather background={currentBackground} data={formatToCurrent(currentData)}/>
                 <HourlyWeather isDay={isDay} data={hourlyData}/>
                 <DailyWeather isDay={isDay} current={formatToCurrent(currentData)} daily={dailyData}/>
-                <CurrentDetails isDay={isDay} data={formatToDetails(details)}/>
+                <CurrentDetails isImperial={isImperial} isDay={isDay} data={formatToDetails(details)}/>
               </div>
           </div>
         </main>

@@ -1,7 +1,6 @@
 import React from 'react'
 
 const CurrentWeather = ( props ) => {
-    console.log(props)
     return (
         <div className="flex items-center justify-center w-full ">
             <div style={props.background === "transparent" ? { background: "transparent" } : { backgroundImage: `url(${props.background})` }} className="border-2 border-white/50 flex flex-col h-36 sm:h-40 w-full items-center justify-center bg-center bg-cover rounded-xl z-10 font-semibold sm:p-20 p-10 ">

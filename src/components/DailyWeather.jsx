@@ -16,7 +16,7 @@ const DailyWeather = (data) => {
                   parseInt(day.icon) > 4 && index !== 1 ?
                   <div className="flex flex-col items-center">
                     <div>{ getIcon(day.icon) }</div>
-                    <div className="text-xs xs:text-sm font-normal text-blue-300">{ day.pop }%</div>
+                    <div className="text-xs xs:text-sm font-extrabold text-blue-300">{ day.pop }%</div>
                   </div>
                   : 
                   <div>{ getIcon(day.icon) }</div>
