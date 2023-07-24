@@ -96,7 +96,6 @@ function App() {
   return (
     <>
       <div className="flex justify-center w-full h-2screen">
-        <button className="z-10" onClick={handleUnitClick}>Change Units</button>
         { error && <div id="app-cover" className="w-full h-2screen absolute z-20 backdrop-blur-3xl"></div>}
         <main className="w-full h-inherit overflow-y-scroll">
           <GetBackground data={{cond: icon}}/>
@@ -119,8 +118,10 @@ function App() {
                 setResults(false)
               }} 
               onChange={async (data) => await handleChange(data)} 
+              handleUnitClick={handleUnitClick}
               searches={searches}
               results={results}
+              isImperial={isImperial}
             />
               <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
                 <CurrentWeather background={currentBackground} data={formatToCurrent(currentData)}/>
