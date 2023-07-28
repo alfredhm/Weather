@@ -5,9 +5,7 @@ import referenceAPI from "./reference-api"
 import getImage from "./image-api"
 
 const API_KEY = process.env.REACT_APP_API_KEY
-const BACKUP_API_KEY = process.env.REACT_APP_BACKUP_API_KEY
 const BASE_URL = process.env.REACT_APP_BASE_URL
-const COORDS_URL = process.env.REACT_APP_COORDS_URL
 const ONE_CALL_URL = process.env.REACT_APP_ONE_CALL_URL
 
 const getCoords = async (location) => {
@@ -26,7 +24,7 @@ const getCoords = async (location) => {
 const getWeatherData = async (info, searchParams) => {
     try {
         const data = await axios.get(BASE_URL + "/" + info, {
-            params: {...searchParams, appid: BACKUP_API_KEY}
+            params: {...searchParams, appid: API_KEY}
         })
         return data
     } catch (err) {
@@ -34,7 +32,7 @@ const getWeatherData = async (info, searchParams) => {
             const coords = await getCoords(searchParams.q)
             const {q, ...params} = searchParams
             const data = await axios.get(BASE_URL + "/" + info, {
-                params: {...params, lat: coords.lat, lon: coords.lon, appid: BACKUP_API_KEY}
+                params: {...params, lat: coords.lat, lon: coords.lon, appid: API_KEY}
             })
             return data
         } catch (err) {
@@ -47,7 +45,7 @@ const getWeatherData = async (info, searchParams) => {
 const getOneCallData = async (lat, lon, units) => {
     try {
         const data = await axios.get(ONE_CALL_URL, {
-            params: {units: units, lat: lat, lon: lon, appid: BACKUP_API_KEY}
+            params: {units: units, lat: lat, lon: lon, appid: API_KEY}
         })
         return data.data
     } catch (err) {
