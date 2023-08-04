@@ -48,13 +48,13 @@ const SearchForm = ({onSubmit, onChange, searches, results, handleUnitClick, isI
             <div className="w-full">
                 <ul className="flex flex-col justify-start w-full">
                 {searches.map((search, index) => (
-                    <div key={index} className={ index === searches.length - 1 ? "flex flex-row py-2 pl-4 gap-2 text-xs xs:text-base hover:bg-zinc-400/40" : "flex flex-row py-2 border-y-2 pl-4 gap-2 text-xs xs:text-base border-white/30 hover:bg-zinc-400/40"}
+                    <div key={index} className={ "flex flex-row items-center pl-1 py-1 w-full border-t-2 h-10 border-collapse text-xs xs:text-base border-white/30 hover:bg-zinc-400/40"}
                       onClick={(event) => {
                         onSubmit(event.target.innerText)
                         reset()
                       }}>
-                        <FaLocationDot size={20}/>
-                        <li>
+                        <FaLocationDot className="ml-3" size={20}/>
+                        <li className="ml-4">
                           {search.description}
                         </li>
                     </div>
