@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Day from "../media/gifs/Day.mp4"
 import DayCloudy from "../media/gifs/DayCloudy.mp4"
 import DayLightning from "../media/gifs/DayLightning.mp4"

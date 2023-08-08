@@ -5,25 +5,27 @@ import { BsCloudsFill } from 'react-icons/bs'
 import { FaCloudSunRain, FaCloudMoonRain } from 'react-icons/fa'
 import { TbMist } from 'react-icons/tb'
 
+const iconSize = window.innerWidth > 389 ? 30 : 25
+
 const iconMap = new Map([
-    ["01d", <IoIosSunny size={ window.innerWidth > 389 ? 30 : 25 }/>],
-    ["01n", <IoIosMoon size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["02d", <IoPartlySunny size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["02n", <IoIosCloudyNight size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["03d", <IoIosCloud size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["03n", <IoIosCloud size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["04d", <BsCloudsFill size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["04n", <BsCloudsFill size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["09d", <IoIosRainy size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["09n", <IoIosRainy size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["10d", <FaCloudSunRain size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["10n", <FaCloudMoonRain size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["11d", <IoIosThunderstorm size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["11n", <IoIosThunderstorm size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["13d", <IoIosSnow size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["13n", <IoIosSnow size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["50d", <TbMist size={ window.innerWidth > 389 ? 30 : 25 } />],
-    ["50n", <TbMist size={ window.innerWidth > 389 ? 30 : 25 } />],
+    ["01d", <IoIosSunny size={iconSize}/>],
+    ["01n", <IoIosMoon size={iconSize} />],
+    ["02d", <IoPartlySunny size={iconSize} />],
+    ["02n", <IoIosCloudyNight size={iconSize} />],
+    ["03d", <IoIosCloud size={iconSize} />],
+    ["03n", <IoIosCloud size={iconSize} />],
+    ["04d", <BsCloudsFill size={iconSize} />],
+    ["04n", <BsCloudsFill size={iconSize} />],
+    ["09d", <IoIosRainy size={iconSize} />],
+    ["09n", <IoIosRainy size={iconSize} />],
+    ["10d", <FaCloudSunRain size={iconSize} />],
+    ["10n", <FaCloudMoonRain size={iconSize} />],
+    ["11d", <IoIosThunderstorm size={iconSize} />],
+    ["11n", <IoIosThunderstorm size={iconSize} />],
+    ["13d", <IoIosSnow size={iconSize} />],
+    ["13n", <IoIosSnow size={iconSize} />],
+    ["50d", <TbMist size={iconSize} />],
+    ["50n", <TbMist size={iconSize} />],
 ])
 
 const getIcon = (code) => {
