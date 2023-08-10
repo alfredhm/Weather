@@ -5,6 +5,8 @@
   "dependencies": {
     "-": "^0.0.1",
     "@hookform/resolvers": "^3.1.1",
+    "@tanstack/react-query": "^4.32.6",
+    "@tanstack/react-query-devtools": "^4.32.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

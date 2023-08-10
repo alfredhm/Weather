@@ -95,6 +95,7 @@ function App() {
   return (
     <>
       <div className="flex justify-center w-full h-2screen">
+        {isLoading && <div className="w-full h-2screen absolute -z-10 bg-zinc-700"></div>}
         {error && (
           <div
             id="app-cover"
@@ -105,9 +106,6 @@ function App() {
           <GetBackground data={{ cond: forecast.icon, error: error }} />
           <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
             {error && <Error error={error} onClick={setError("")} />}
-            {isLoading && (
-              <p className="z-10 font-extrabold text-2xl">Loading...</p>
-            )}
             <SearchForm
               onSubmit={(location) => {
                 handleSubmit(location);
@@ -118,25 +116,29 @@ function App() {
               searches={searches}
               results={results}
               isImperial={isImperial}
+              isLoading={isLoading}
             />
             <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
               <CurrentWeather
                 background={forecast.currentBackground}
                 data={formatToCurrent(forecast.currentData)}
+                isLoading={isLoading}
               />
               <HourlyWeather
-                isDay={forecast.isDay}
                 data={forecast.hourlyData}
+                isLoading={isLoading}
+                isDay={forecast.isDay}
               />
               <DailyWeather
                 isDay={forecast.isDay}
-                current={formatToCurrent(forecast.currentData)}
-                daily={forecast.dailyData}
+                data={forecast.dailyData}
+                isLoading={isLoading}
               />
               <CurrentDetails
                 isImperial={isImperial}
                 isDay={forecast.isDay}
                 data={formatToDetails(forecast.details)}
+                isLoading={isLoading}
               />
             </div>
           </div>
