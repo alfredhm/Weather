@@ -33,24 +33,12 @@ function App() {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  let searchRef = useRef(searches);
+  // let searchRef = useRef(searches);
 
   const handleSubmit = async (data) => {
-    setLocation(data);
   };
 
-  const handleChange = async (query) => {
-    const input = await placesAPI(query);
-    if (query === "") {
-      setResults(false);
-    } else if (input === "") {
-      setResults(false);
-      setError("No Search Results");
-    } else {
-      setSearches(input);
-      setResults(true);
-      searchRef.current = input;
-    }
+  const handleChange = (data) => {
   };
 
   const handleUnitClick = () => {

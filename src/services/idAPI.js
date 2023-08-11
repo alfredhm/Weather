@@ -7,7 +7,6 @@ async function getLocationId(search) {
       url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${search}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`,
     });
 
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
