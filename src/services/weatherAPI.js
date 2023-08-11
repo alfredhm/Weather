@@ -1,22 +1,8 @@
 import axios from "axios";
-import placesAPI from "./placesAPI";
-import coordsAPI from "./coordsAPI";
 import referenceAPI from "./referenceAPI";
 import getImage from "./imageAPI";
 
-const getCoords = async (location) => {
-  try {
-    const fullLocation = await placesAPI(location);
-    const placeId = fullLocation[0].place_id;
-    const coords = await coordsAPI(placeId);
-    return { lat: coords.lat, lon: coords.lon, placeId: placeId };
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
-};
-
-const getWeatherData = async (info, searchParams) => {
+const getWeatherData = async (info, searchParams, coords) => {
   try {
     const data = await axios.get(process.env.REACT_APP_BASE_URL + "/" + info, {
       params: { ...searchParams, appid: process.env.REACT_APP_API_KEY },
@@ -24,7 +10,6 @@ const getWeatherData = async (info, searchParams) => {
     return data;
   } catch (err) {
     try {
-      const coords = await getCoords(searchParams.q);
       const { q, ...params } = searchParams;
       const data = await axios.get(process.env.REACT_APP_BASE_URL + "/" + info, {
         params: { ...params, lat: coords.lat, lon: coords.lon, appid: process.env.REACT_APP_API_KEY },
@@ -153,9 +138,8 @@ const formatDetails = (data) => {
   };
 };
 
-const getFormattedWeatherData = async (searchParams) => {
-  const coords = await getCoords(searchParams.q);
-  const reference = await referenceAPI(coords.placeId);
+const getFormattedWeatherData = async (searchParams, coords, placeId) => {
+  const reference = await referenceAPI(placeId);
   let image = "transparent";
   if (reference) {
     image = await getImage(reference);
@@ -163,10 +147,12 @@ const getFormattedWeatherData = async (searchParams) => {
   const formattedCurrentWeather = await getWeatherData(
     "weather",
     searchParams,
+    coords
   ).then(formatCurrentWeather);
+
   const oneCallData = await getOneCallData(
     coords.lat,
-    coords.lon,
+    coords.lng,
     searchParams.units,
   );
   const formattedDailyWeatherData = formatDailyWeather(oneCallData);

@@ -1,7 +1,6 @@
 // Utility
 import getFormattedWeatherData from "./services/weatherAPI";
 import GetBackground from "./components/GetBackground";
-import placesAPI from "./services/placesAPI";
 import { formatToCurrent, formatToDetails } from "./util/formats";
 
 // Components
@@ -12,7 +11,7 @@ import HourlyWeather from "./components/HourlyWeather";
 import SearchForm from "./components/SearchForm";
 
 // ReactJS
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Error from "./components/Error";
 
 function App() {
@@ -26,19 +25,19 @@ function App() {
     isDay: false,
   });
 
-  const [searches, setSearches] = useState([]);
-  const [results, setResults] = useState(false);
   const [location, setLocation] = useState("houston");
+  const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
+  const [placeId, setPlaceId] = useState("ChIJAYWNSLS4QIYROwVl894CDco")
   const [isImperial, setIsImperial] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // let searchRef = useRef(searches);
 
   const handleSubmit = async (data) => {
-  };
-
-  const handleChange = (data) => {
+    setLocation(data.location)
+    console.log(data, data.location)
+    setCoords(data.coords)
+    setPlaceId(data.placeId)
   };
 
   const handleUnitClick = () => {
@@ -50,9 +49,10 @@ function App() {
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({
-          q: location,
+          lat: coords.lat,
+          lon: coords.lng,
           units: isImperial ? "imperial" : "metric",
-        });
+        }, coords, placeId);
 
         setForecast({
           currentData: data.current,
@@ -78,6 +78,7 @@ function App() {
       }
     };
     getWeather(location);
+    console.log(location, coords)
   }, [location, isImperial, error]);
 
   return (
@@ -97,12 +98,8 @@ function App() {
             <SearchForm
               onSubmit={(location) => {
                 handleSubmit(location);
-                setResults(false);
               }}
-              onChange={async (data) => await handleChange(data)}
               handleUnitClick={handleUnitClick}
-              searches={searches}
-              results={results}
               isImperial={isImperial}
               isLoading={isLoading}
             />
