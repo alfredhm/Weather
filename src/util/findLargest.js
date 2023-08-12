@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const findLargest = (images) => {
   let max = images[0];
   for (let i = 0; i < images.length; i++) {

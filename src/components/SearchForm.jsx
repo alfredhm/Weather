@@ -6,7 +6,7 @@ import { FaLocationDot } from 'react-icons/fa6'
 
 // Shoogle
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import { findLargest } from '../services/referenceAPI'
+import { findLargest } from '../util/findLargest'
 
 
 const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import getImage from "./imageAPI";
+import { formatCurrentWeather, formatHourlyWeather, formatDailyWeather, formatDetails } from "../util/formats";
 
 const getWeatherData = async (info, searchParams, coords) => {
   try {
@@ -33,109 +33,6 @@ const getOneCallData = async (lat, lon, units) => {
   }
 };
 
-const formatCurrentWeather = (data) => {
-  const {
-    coord: { lat, lon },
-    main: { temp, temp_min, temp_max },
-    name,
-    dt,
-    sys: { country },
-    weather,
-  } = data.data;
-
-  const { icon } = weather[0];
-
-  return {
-    lat,
-    lon,
-    temp,
-    temp_min,
-    temp_max,
-    name,
-    dt,
-    icon,
-    country,
-  };
-};
-
-const formatHourlyWeather = (data) => {
-  const hourly = [];
-  for (let i = 0; i < 26; i++) {
-    const time = new Date(data.hourly[i].dt * 1000)
-      .toLocaleTimeString("en-US", {
-        hour: "numeric",
-        hour12: true,
-        timeZone: data.timezone,
-      })
-      .toLowerCase()
-      .replace(" ", "");
-    const temp = Math.round(parseFloat(data.hourly[i].temp));
-    const pop = parseInt(data.hourly[i].pop * 100);
-    const {
-      weather: [{ icon }],
-    } = data.hourly[i];
-
-    const hour = { time: time, temp: temp, icon: icon, pop: pop };
-    hourly.push(hour);
-  }
-  return hourly;
-};
-
-const formatDailyWeather = (data) => {
-  const daily = [];
-  const isDay = data.hourly[0].weather[0].icon.includes("d");
-  for (let i = 0; i < 8; i++) {
-    const weekday = new Date(data.daily[i].dt * 1000).toLocaleString("en-US", {
-      weekday: "short",
-      timeZone: data.timezone,
-    });
-    const icon = data.daily[i].weather[0].icon;
-    const { max, min } = data.daily[i].temp;
-    const pop = parseInt(data.daily[i].pop * 100);
-    const day = {
-      day: weekday,
-      icon: icon,
-      high: Math.round(parseFloat(max)),
-      low: Math.round(parseFloat(min)),
-      pop: pop,
-    };
-    daily.push(day);
-  }
-  const dailyData = {
-    daily: daily,
-    isDay: isDay,
-  };
-  return dailyData;
-};
-
-const formatDetails = (data) => {
-  const {
-    sunrise,
-    sunset,
-    feels_like,
-    pressure,
-    humidity,
-    uvi,
-    visibility,
-    wind_speed,
-    wind_deg,
-    weather: [{ main, description }],
-  } = data.current;
-
-  return {
-    sunrise,
-    sunset,
-    feels_like,
-    pressure,
-    humidity,
-    uvi,
-    visibility,
-    wind_speed,
-    wind_deg,
-    main,
-    description,
-  };
-};
 
 const getFormattedWeatherData = async (searchParams, coords) => {
   const formattedCurrentWeather = await getWeatherData(
