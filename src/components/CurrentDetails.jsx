@@ -13,60 +13,42 @@ const CurrentDetails = ({isImperial, isDay, data, isLoading}) => {
     return directions[index]
   }
 
+  const size = window.innerWidth > 767 ? 30 : 20
+
+  const skeletons = [0, 1, 2, 3, 4]
+
+  const details = [
+    { icon: <LiaTemperatureLowSolid size={size} />, header: "Feels Like", data: Math.round(parseInt(data.feelsLike)).toString() +  '°', details: null},
+    { icon: <IoIosSunny size={size} />, header: "UV Index", data: Math.round(parseFloat(data.uv)).toString(), details: data.uv < 4 ? "Low" : data.uv > 6 ? "High" : "Med" },
+    { icon: <PiWindBold size={size} />, header: "Wind", data: directionKey(parseInt(data.windDeg)), details: `${Math.round(parseFloat(data.windSpeed)).toString()} ${isImperial ? "mph" : "kph"}`},
+    { icon: <WiHumidity size={size} />, header: "Humidity", data: data.humidity + "%", details: null },
+    { icon: <MdVisibility size={size} />, header: "Visibility", data: isImperial ? Math.round(data.visibility * 0.000621).toString() : Math.round(data.visibility * 0.001).toString(), details:  isImperial ? "mi" : "km" } 
+  ]
+
   return (
     <div className="w-full grid justify-center grid-cols-2 details:grid-cols-3 gap-4">
-        <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}} className="z-10 rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
-                <div className="flex flex-row items-center">
-                    <LiaTemperatureLowSolid size={window.innerWidth > 767 ? 30 : 20}/>
-                    <p className="text-xs md:text-xl pl-1">Feels Like</p>
-                </div>
-                <p className="text-xl xs:text-3xl">{Math.round(parseInt(data.feelsLike)).toString()}&deg;</p>
-            </div>
-        </div>
-        <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
-                <div className="flex flex-row items-center">
-                    <IoIosSunny size={window.innerWidth > 767 ? 30 : 20}/>
-                    <p className="text-xs md:text-xl pl-1">UV Index</p>
-                </div>
-                <p className="text-xl xs:text-3xl">{Math.round(parseFloat(data.uv)).toString()}</p>
-                <p className="text-xs xs:text-xl">{ data.uv < 4 ? "Low" : data.uv > 6 ? "High" : "Med"}</p>
-            </div> 
-        </div>         
-        <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
-                <div className="flex flex-row items-center">
-                    <PiWindBold size={window.innerWidth > 767 ? 30 : 20}/>
-                    <p className="text-xs md:text-xl pl-1">Wind</p>
-                </div>
-                <p className="text-xl xs:text-3xl">{directionKey(parseInt(data.windDeg))}</p>
-                <p className="text-xs xs:text-xl font-light ">{Math.round(parseFloat(data.windSpeed)).toString()} {isImperial ? "mph" : "kph"}</p>
-            </div> 
-        </div>
-        <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
-                <div className="flex flex-row items-center">
-                    <WiHumidity size={window.innerWidth > 767 ? 30 : 20}/>
-                    <p className="text-xs md:text-xl pl-1">Humidity</p>
-                </div>
-                <p className="text-xl xs:text-3xl">{data.humidity}%</p>
-            </div> 
-        </div>
-        <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}}  className="bg-slate-300/20 z-10 rounded-xl w-full aspect-square border-2 border-white/50">
-            <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
-                <div className="flex flex-row items-center">
-                    <MdVisibility size={window.innerWidth > 767 ? 30 : 20}/>
-                    <p className="text-xs md:text-xl pl-1">Visibility</p>
-                </div>
-                <div className="flex flex-row md:gap-2 gap-1 items-end">
-                    <p className="text-xl xs:text-3xl">{isImperial ? Math.round(data.visibility * 0.000621).toString() : Math.round(data.visibility * 0.001).toString()}</p>
-                    <p className="text-xs xs:text-xl font-light ">{isImperial ? "mi" : "km"}</p>
-                </div>
-            </div> 
-        </div>
+        { isLoading ?
+            skeletons.map(skeleton => 
+                <div key={skeleton} className="bg-transparent z-10 rounded-xl w-full aspect-square border-2 border-white/50"></div>  
+            )
+        :    
+            details.map(detail => 
+                <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}} className="z-10 rounded-xl w-full aspect-square border-2 border-white/50">
+                    <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
+                        <div className="flex flex-row items-center">
+                            { detail.icon }
+                            <p className="text-xs md:text-xl pl-1">{detail.header}</p>
+                        </div>
+                        <p className="text-xl xs:text-3xl">{detail.data}</p>
+                        { detail.details && <p className="text-xs xs:text-xl">{detail.details}</p>}
+                    </div>
+                </div>   
+            )
+        }
+
     </div>
   )
+
 }
 
 export default CurrentDetails

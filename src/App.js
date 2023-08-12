@@ -35,7 +35,6 @@ function App() {
 
   const handleSubmit = async (data) => {
     setLocation(data.location)
-    console.log(data, data.location)
     setCoords(data.coords)
     setPlaceId(data.placeId)
   };
@@ -78,7 +77,6 @@ function App() {
       }
     };
     getWeather(location);
-    console.log(location, coords)
   }, [location, isImperial, error]);
 
   return (
