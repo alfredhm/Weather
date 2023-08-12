@@ -6,6 +6,7 @@ import { FaLocationDot } from 'react-icons/fa6'
 
 // Shoogle
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
+import { findLargest } from '../services/referenceAPI'
 
 
 const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
@@ -29,8 +30,22 @@ const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
       const results = await getGeocode({ address })
       const { lat, lng } =  await getLatLng(results[0])
       const placeId = results[0].place_id
-  
-      onSubmit({location: address, coords: {lat: lat, lng: lng}, placeId: placeId})
+
+      const request = {
+        placeId: placeId,
+        fields: [
+          "photos"
+        ]
+      }
+
+      const map = new window.google.maps.Map(document.createElement('div'))
+      const service = new window.google.maps.places.PlacesService(map)
+
+      var photo
+      service.getDetails(request, async (place) => {
+        photo = await findLargest(place.photos)
+        onSubmit({location: address, coords: {lat: lat, lng: lng}, placeId: placeId, background: photo})
+      })
       setValue("")
 
     } catch (error) {

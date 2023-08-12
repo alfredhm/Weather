@@ -27,7 +27,7 @@ function App() {
 
   const [location, setLocation] = useState("houston");
   const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
-  const [placeId, setPlaceId] = useState("ChIJAYWNSLS4QIYROwVl894CDco")
+  const [backgroundURL, setBackgroundURL] = useState("https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAUacShisXli5AviqymzdXf_vgsTi5M05wDJCw4UpAQZda9hH-yhjdFpSF4tYS5_0KVb1u-FFjMQ_btWUSpZNIh5TQEq9kQQfWfTCnp7z35KKwgiIoWPO8Q-9qclMycu0lHpuzfa9cjvIRtiaUXW_0YavfphxVqfAYIoDZ-Odq1hAhTJa5dXb&3u4032&5m1&2e1&callback=none&key=AIzaSyDDepM3u_BS2Oqb0DroW9SxC1M-PNwMru0&token=73715")
   const [isImperial, setIsImperial] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +36,7 @@ function App() {
   const handleSubmit = async (data) => {
     setLocation(data.location)
     setCoords(data.coords)
-    setPlaceId(data.placeId)
+    setBackgroundURL(data.background)
   };
 
   const handleUnitClick = () => {
@@ -51,7 +51,7 @@ function App() {
           lat: coords.lat,
           lon: coords.lng,
           units: isImperial ? "imperial" : "metric",
-        }, coords, placeId);
+        }, coords);
 
         setForecast({
           currentData: data.current,
@@ -59,7 +59,7 @@ function App() {
           dailyData: data.daily,
           details: data.details,
           icon: data.current.icon,
-          currentBackground: data.currentBackground,
+          currentBackground: backgroundURL,
           isDay: data.isDay,
         });
 
@@ -77,6 +77,7 @@ function App() {
       }
     };
     getWeather(location);
+    console.log(backgroundURL)
   }, [location, isImperial, error]);
 
   return (

@@ -3,7 +3,7 @@ import React from 'react'
 const CurrentWeather = ( {background, data, isLoading} ) => {
     return (
         <div className="flex items-center justify-center w-full ">
-            <div style={background === "transparent" || isLoading ? { background: "transparent" } : { backgroundImage: `url(${background})` }} className="border-2 border-white/50 flex flex-col h-36 sm:h-40 w-full items-center justify-center bg-center bg-cover rounded-xl z-10 font-semibold sm:p-20 p-10 ">
+            <div style={ isLoading ? { background: "transparent" } : { backgroundImage: `url(${background})` }} className="border-2 border-white/50 flex flex-col h-36 sm:h-40 w-full items-center justify-center bg-center bg-cover rounded-xl z-10 font-semibold sm:p-20 p-10 ">
                 <div className="border-4 border-white/50 backdrop-blur-xl p-2 sm:p-3 lg:p-4 rounded-xl">
                     <div className="flex flex-row justify-center gap-2 sm:gap-3">
                         <p className="sm:base text-sm flex items-center">L:{ isLoading ? "-" : parseInt(data.low) }&deg;</p>

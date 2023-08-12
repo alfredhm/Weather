@@ -32,8 +32,8 @@ const CurrentDetails = ({isImperial, isDay, data, isLoading}) => {
                 <div key={skeleton} className="bg-transparent z-10 rounded-xl w-full aspect-square border-2 border-white/50"></div>  
             )
         :    
-            details.map(detail => 
-                <div style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}} className="z-10 rounded-xl w-full aspect-square border-2 border-white/50">
+            details.map((detail, index) => 
+                <div key={index} style={isDay ? { backgroundColor: "rgb(203 213 225 / 0.2)"} : {backgroundColor: "rgb(100 116 139 / 0.2)"}} className="z-10 rounded-xl w-full aspect-square border-2 border-white/50">
                     <div className="xs:px-4 px-2 py-2 h-full flex flex-col items-left justify-start rounded-xl ">
                         <div className="flex flex-row items-center">
                             { detail.icon }

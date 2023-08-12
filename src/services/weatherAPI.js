@@ -1,5 +1,4 @@
 import axios from "axios";
-import referenceAPI from "./referenceAPI";
 import getImage from "./imageAPI";
 
 const getWeatherData = async (info, searchParams, coords) => {
@@ -138,12 +137,7 @@ const formatDetails = (data) => {
   };
 };
 
-const getFormattedWeatherData = async (searchParams, coords, placeId) => {
-  const reference = await referenceAPI(placeId);
-  let image = "transparent";
-  if (reference) {
-    image = await getImage(reference);
-  }
+const getFormattedWeatherData = async (searchParams, coords) => {
   const formattedCurrentWeather = await getWeatherData(
     "weather",
     searchParams,
@@ -168,7 +162,6 @@ const getFormattedWeatherData = async (searchParams, coords, placeId) => {
     daily: formattedDailyWeather,
     details: formattedDetails,
     condId: condId,
-    currentBackground: reference ? image.props.src : image,
   };
 };
 
