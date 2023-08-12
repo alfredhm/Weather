@@ -31,18 +31,13 @@ const backgroundMap = new Map([
   ["50n", NightCloudy],
 ])
 
-const setPlayback = () => {
-  const video = document.querySelector('video')
-  video.playbackRate = 0.75
-}
-
 const GetBackground = ({data}) => {
   return (
     <>
       {data.error ? 
         <div className="w-full h-2screen absolute bg-gradient-to-br from-blue-500 to-blue-300"></div>
         : 
-        <video onPlay={setPlayback} key={backgroundMap.get(data.cond)} className="w-screen h-2screen object-cover inset-0 absolute" autoPlay={true} loop={true} muted={true} playsInline={true}>
+        <video key={backgroundMap.get(data.cond)} className="w-screen h-2screen object-cover inset-0 absolute" autoPlay={true} loop={true} muted={true} playsInline={true}>
           <source src={backgroundMap.get(data.cond)} type="video/mp4" />
         </video>
     }
