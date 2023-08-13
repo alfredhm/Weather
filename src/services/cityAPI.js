@@ -1,6 +1,6 @@
 import axios from "axios";
 
-async function cityAPI(lat, lng) {
+export const cityAPI = async (lat, lng) => {
   try {
     const data = await axios({
       method: "GET",
@@ -20,4 +20,3 @@ async function cityAPI(lat, lng) {
   }
 }
 
-export default cityAPI;

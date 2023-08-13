@@ -37,6 +37,7 @@ function App() {
     setLocation(data.location)
     setCoords(data.coords)
     setBackgroundURL(data.background)
+    console.log(data)
   };
 
   const handleUnitClick = () => {
@@ -77,7 +78,6 @@ function App() {
       }
     };
     getWeather(location);
-    console.log(backgroundURL)
   }, [location, isImperial, error]);
 
   return (

@@ -8,6 +8,8 @@ import { FaLocationDot } from 'react-icons/fa6'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { findLargest } from '../util/findLargest'
 
+// Functions
+import { cityAPI } from "../services/cityAPI"
 
 const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
 
@@ -44,7 +46,7 @@ const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
       var photo
       service.getDetails(request, async (place) => {
         photo = await findLargest(place.photos)
-        onSubmit({location: address, coords: {lat: lat, lng: lng}, placeId: placeId, background: photo})
+        onSubmit({location: await cityAPI(lat, lng), coords: {lat: lat, lng: lng}, placeId: placeId, background: photo})
       })
       setValue("")
 
