@@ -25,7 +25,7 @@ function App() {
     isDay: false,
   });
 
-  const [location, setLocation] = useState("houston");
+  const [location, setLocation] = useState("Houston");
   const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
   const [backgroundURL, setBackgroundURL] = useState("https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAUacShisXli5AviqymzdXf_vgsTi5M05wDJCw4UpAQZda9hH-yhjdFpSF4tYS5_0KVb1u-FFjMQ_btWUSpZNIh5TQEq9kQQfWfTCnp7z35KKwgiIoWPO8Q-9qclMycu0lHpuzfa9cjvIRtiaUXW_0YavfphxVqfAYIoDZ-Odq1hAhTJa5dXb&3u4032&5m1&2e1&callback=none&key=AIzaSyDDepM3u_BS2Oqb0DroW9SxC1M-PNwMru0&token=73715")
   const [isImperial, setIsImperial] = useState(true);
@@ -105,7 +105,7 @@ function App() {
             <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
               <CurrentWeather
                 background={forecast.currentBackground}
-                data={formatToCurrent(forecast.currentData)}
+                data={formatToCurrent(forecast.currentData, location)}
                 isLoading={isLoading}
               />
               <HourlyWeather
