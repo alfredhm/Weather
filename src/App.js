@@ -64,6 +64,8 @@ function App() {
           isDay: data.isDay,
         });
 
+        console.log(data.daily[0].high, data.daily[0].low)
+
         setError("");
         setLoading(false);
       } catch (err) {
@@ -106,6 +108,8 @@ function App() {
               <CurrentWeather
                 background={forecast.currentBackground}
                 data={formatToCurrent(forecast.currentData, location)}
+                low={forecast.dailyData[0].low}
+                high={forecast.dailyData[0].high}
                 isLoading={isLoading}
               />
               <HourlyWeather
