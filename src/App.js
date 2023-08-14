@@ -37,7 +37,6 @@ function App() {
     setLocation(data.location)
     setCoords(data.coords)
     setBackgroundURL(data.background)
-    console.log(data)
   };
 
   const handleUnitClick = () => {
@@ -63,7 +62,7 @@ function App() {
           currentBackground: backgroundURL,
           isDay: data.isDay,
         });
-        
+
         setError("");
         setLoading(false);
       } catch (err) {

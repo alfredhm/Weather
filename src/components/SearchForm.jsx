@@ -30,7 +30,6 @@ const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
       const results = await getGeocode({ address })
       const locationParts = results[0].formatted_address.split(',')
       let location
-      console.log(locationParts)
       if (locationParts.length > 3) {
         location = locationParts[0] + locationParts[1].replace(/[0-9]/g, '')
       } else {
