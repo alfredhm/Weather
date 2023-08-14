@@ -7,7 +7,7 @@ export const cityAPI = async (lat, lng) => {
       url: `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
     });
 
-    return data.data.city;
+    return data.data.locality;
   } catch (error) {
     if (error.response) {
       console.log("The server responded with an error");

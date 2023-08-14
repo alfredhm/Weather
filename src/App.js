@@ -78,7 +78,7 @@ function App() {
       }
     };
     getWeather(location);
-  }, [location, isImperial, error]);
+  }, [location, isImperial, error, backgroundURL, coords]);
 
   return (
     <>
