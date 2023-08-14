@@ -36,7 +36,6 @@ const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
       } else {
         location = locationParts[0].replace(/[0-9]/g, '')
       }
-      console.log(results[0])
       const { lat, lng } =  await getLatLng(results[0])
       const placeId = results[0].place_id
 

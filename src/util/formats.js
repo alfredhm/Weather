@@ -93,7 +93,9 @@ export const formatDetails = (data) => {
 
 export const formatToCurrent = (data, location) => {
   return {
+    low: data.temp_min,
     curr: data.temp,
+    high: data.temp_max,
     location: location,
     icon: data.icon,
   };

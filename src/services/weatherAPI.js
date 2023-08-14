@@ -46,8 +46,6 @@ const getFormattedWeatherData = async (searchParams, coords) => {
     coords.lng,
     searchParams.units,
   );
-  //const formattedCurrentWeather = formatCurrentWeather(oneCallData)
-  console.log(oneCallData.daily[0])
   const formattedDailyWeatherData = formatDailyWeather(oneCallData);
   const formattedDailyWeather = formattedDailyWeatherData.daily;
   const isDay = formattedDailyWeatherData.isDay;
