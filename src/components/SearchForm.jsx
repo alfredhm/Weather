@@ -9,7 +9,7 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import { findLargest } from '../util/findLargest'
 
 
-const SearchForm = ({onSubmit, handleUnitClick, isImperial}) => {
+const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
 
   const {
     value,
