@@ -52,7 +52,7 @@ const getSearchData = async (address, initial, coords) => {
     }
 
     const photo = getPhoto(request)
-    console.log(photo)
+    console.log(getPhoto(request))
 
     return {
       location: location, 
