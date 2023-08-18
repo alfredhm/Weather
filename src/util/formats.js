@@ -1,6 +1,7 @@
 export const formatCurrentWeather = (data) => {
   const {
-    main: { temp },
+    main: { temp, temp_max, temp_min },
+    name,
     weather,
   } = data.data;
 
@@ -8,7 +9,10 @@ export const formatCurrentWeather = (data) => {
 
   return {
     temp,
+    temp_max,
+    temp_min,
     icon,
+    name
   };
 };
 
@@ -91,13 +95,13 @@ export const formatDetails = (data) => {
   };
 }
 
-export const formatToCurrent = (data, location) => {
+export const formatToCurrent = (data) => {
   return {
     low: data.temp_min,
     curr: data.temp,
     high: data.temp_max,
-    location: location,
     icon: data.icon,
+    location: data.name
   };
 };
 

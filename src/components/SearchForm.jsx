@@ -5,14 +5,12 @@ import { FaSearch } from'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 
 // Shoogle
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import { findLargest } from '../util/findLargest'
+import usePlacesAutocomplete from 'use-places-autocomplete'
+import getSearchData from '../services/searchData'
 
 
 const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
-
-  const defaultSearch = 'Houston'
-
+  
   const {
     value,
     setValue,
@@ -28,33 +26,8 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
     try {
       setValue(address, false)
       clearSuggestions()
-  
-      const results = await getGeocode({ address })
-      const locationParts = results[0].formatted_address.split(',')
-      let location
-      if (locationParts.length > 3) {
-        location = locationParts[0] + locationParts[1].replace(/[0-9]/g, '')
-      } else {
-        location = locationParts[0].replace(/[0-9]/g, '')
-      }
-      const { lat, lng } =  await getLatLng(results[0])
-      const placeId = results[0].place_id
-
-      const request = {
-        placeId: placeId,
-        fields: [
-          "photos"
-        ]
-      }
-
-      const map = new window.google.maps.Map(document.createElement('div'))
-      const service = new window.google.maps.places.PlacesService(map)
-
-      var photo
-      service.getDetails(request, async (place) => {
-        photo = await findLargest(place.photos)
-        onSubmit({location: location, coords: {lat: lat, lng: lng}, placeId: placeId, background: photo})
-      })
+      const searchData = await getSearchData(address)
+      onSubmit(searchData)
       setValue("")
 
     } catch (error) {
@@ -62,10 +35,6 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
     }
 
   }
-
-  useEffect(() => {
-    handleSelect(defaultSearch)
-  }, [defaultSearch])
 
   return (
     <>

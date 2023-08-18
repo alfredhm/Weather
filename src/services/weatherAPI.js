@@ -1,23 +1,15 @@
 import axios from "axios";
 import { formatCurrentWeather, formatHourlyWeather, formatDailyWeather, formatDetails } from "../util/formats";
 
-const getWeatherData = async (info, searchParams, coords) => {
+const getWeatherData = async (info, searchParams) => {
   try {
     const data = await axios.get(process.env.REACT_APP_BASE_URL + "/" + info, {
       params: { ...searchParams, appid: process.env.REACT_APP_API_KEY },
     });
     return data;
   } catch (err) {
-    try {
-      const { q, ...params } = searchParams;
-      const data = await axios.get(process.env.REACT_APP_BASE_URL + "/" + info, {
-        params: { ...params, lat: coords.lat, lon: coords.lon, appid: process.env.REACT_APP_API_KEY },
-      });
-      return data;
-    } catch (err) {
-      console.log(err);
-      return err;
-    }
+    console.log(err);
+    return err;
   }
 };
 
@@ -34,16 +26,15 @@ const getOneCallData = async (lat, lon, units) => {
 };
 
 
-const getFormattedWeatherData = async (searchParams, coords) => {
+const getFormattedWeatherData = async (searchParams) => {
   const formattedCurrentWeather = await getWeatherData(
     "weather",
-    searchParams,
-    coords
+    searchParams
   ).then(formatCurrentWeather);
 
   const oneCallData = await getOneCallData(
-    coords.lat,
-    coords.lng,
+    searchParams.lat,
+    searchParams.lon,
     searchParams.units,
   );
   const formattedDailyWeatherData = formatDailyWeather(oneCallData);

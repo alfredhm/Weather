@@ -13,9 +13,11 @@ import Error from "./components/Error";
 
 // ReactJS
 import { useEffect, useState } from "react";
+import getSearchData from "./services/searchData";
 
 
 function App() {
+
   const [forecast, setForecast] = useState({
     currentData: {},
     hourlyData: [],
@@ -26,9 +28,8 @@ function App() {
     isDay: false,
   });
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState();
   const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
-  const [geoCoords, setGeoCoords] = useState()
   const [backgroundURL, setBackgroundURL] = useState("")
   const [isImperial, setIsImperial] = useState(true);
   const [isLoading, setLoading] = useState(false);
@@ -46,21 +47,45 @@ function App() {
   };
 
   useEffect(() => {
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setGeoCoords({lat: position.coords.latitude, lng: position.coords.longitude})
-      })
+    const getInitial = async (place_id, initial) => {
+      if (navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition((position) => {
+          setCoords({lat: position.coords.latitude, lng: position.coords.longitude})
+        })
+      }
+      const data = await getSearchData(place_id, initial, coords)
+      handleSubmit(data)
     }
     
+    let x
+    const geocoder = new window.google.maps.Geocoder()
+    const latlngStr = coords.lat.toString() + " " + coords.lng.toString()
+    const latlngSpl = latlngStr.split(" ", 2)
+    const latlng = {
+      lat: parseFloat(latlngSpl[0]),
+      lng: parseFloat(latlngSpl[1])
+    }
+    geocoder
+      .geocode({ location: latlng})
+      .then((results) => {
+        x = results.results[0].place_id.toString()
+        getInitial(x, true)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+    
+  }, [])
+
+  useEffect(() => {
     setLoading(true);
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({
-          lat: geoCoords.lat ? geoCoords.lat : coords.lat,
-          lon: geoCoords.lng ? geoCoords.lng : coords.lng,
+          lat: coords.lat,
+          lon: coords.lng,
           units: isImperial ? "imperial" : "metric",
-        }, coords);
+        });
 
         setForecast({
           currentData: data.current,
@@ -75,23 +100,17 @@ function App() {
         setError("");
         setLoading(false);
       } catch (err) {
-        if (
-          err.message === "Cannot read properties of undefined (reading 'lat')"
-        ) {
-          setError("No Location Found");
-        } else {
-          setError(err.message);
-        }
+        setError(err.message);
         setLoading(false);
       }
     };
     getWeather(location);
-  }, [location, isImperial, error, backgroundURL, coords]);
+  }, [location, isImperial, backgroundURL]);
 
   return (
     <>
       <div className="flex justify-center w-full h-2screen">
-        {isLoading && <div className="w-full h-2screen absolute -z-10 bg-zinc-700"></div>}
+        {isLoading && <div className="w-full h-2screen absolute -z-10 bg-blue-600/40"></div>}
         {error && (
           <div
             id="app-cover"
@@ -113,9 +132,10 @@ function App() {
             <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
               <CurrentWeather
                 background={forecast.currentBackground}
-                data={formatToCurrent(forecast.currentData, location)}
+                data={formatToCurrent(forecast.currentData)}
                 low={forecast.dailyData[0] ? forecast.dailyData[0].low : null}
                 high={forecast.dailyData[0] ? forecast.dailyData[0].high : null}
+                location={location}
                 isLoading={isLoading}
               />
               <HourlyWeather
