@@ -9,10 +9,11 @@ import CurrentWeather from "./components/CurrentWeather";
 import DailyWeather from "./components/DailyWeather";
 import HourlyWeather from "./components/HourlyWeather";
 import SearchForm from "./components/SearchForm";
+import Error from "./components/Error";
 
 // ReactJS
 import { useEffect, useState } from "react";
-import Error from "./components/Error";
+
 
 function App() {
   const [forecast, setForecast] = useState({
@@ -25,9 +26,10 @@ function App() {
     isDay: false,
   });
 
-  const [location, setLocation] = useState("Houston");
+  const [location, setLocation] = useState("");
   const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
-  const [backgroundURL, setBackgroundURL] = useState("https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAUacShj5TRRkhn3NPrtQFNBivCLLOVO5fzQCpJ44xnkPalw0FFhOfS-4XgL8VZBoN0iKp6Z1pCkIYctU6dqLDNlLH-9HkV_7HaDiRb9Wcq9QRui0sZhskGfN5Eq5wr6vOoIgvJpHOiCqf-a6DYFfZ4zNuQ7QFQLns68qVcrhC9Z5OAO2_IAX&3u4032&5m1&2e1&callback=none&key=AIzaSyDDepM3u_BS2Oqb0DroW9SxC1M-PNwMru0&token=84442&quot")
+  const [geoCoords, setGeoCoords] = useState()
+  const [backgroundURL, setBackgroundURL] = useState("")
   const [isImperial, setIsImperial] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,12 +46,19 @@ function App() {
   };
 
   useEffect(() => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setGeoCoords({lat: position.coords.latitude, lng: position.coords.longitude})
+      })
+    }
+    
     setLoading(true);
     const getWeather = async () => {
       try {
         const data = await getFormattedWeatherData({
-          lat: coords.lat,
-          lon: coords.lng,
+          lat: geoCoords.lat ? geoCoords.lat : coords.lat,
+          lon: geoCoords.lng ? geoCoords.lng : coords.lng,
           units: isImperial ? "imperial" : "metric",
         }, coords);
 

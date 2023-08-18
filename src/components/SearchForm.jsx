@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 // Icons/Images
 import { FaSearch } from'react-icons/fa'
@@ -10,6 +10,8 @@ import { findLargest } from '../util/findLargest'
 
 
 const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
+
+  const defaultSearch = 'Houston'
 
   const {
     value,
@@ -60,6 +62,10 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
     }
 
   }
+
+  useEffect(() => {
+    handleSelect(defaultSearch)
+  }, [defaultSearch])
 
   return (
     <>
