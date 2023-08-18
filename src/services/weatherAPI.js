@@ -4,7 +4,7 @@ import { formatCurrentWeather, formatHourlyWeather, formatDailyWeather, formatDe
 const getWeatherData = async (info, searchParams) => {
   try {
     const data = await axios.get(process.env.REACT_APP_BASE_URL + "/" + info, {
-      params: { ...searchParams, appid: process.env.REACT_APP_API_KEY },
+      params: { ...searchParams, appid: process.env.REACT_APP_API_KEY  || process.env.REACT_APP_API_KEY_BACKUP },
     });
     return data;
   } catch (err) {
@@ -16,7 +16,7 @@ const getWeatherData = async (info, searchParams) => {
 const getOneCallData = async (lat, lon, units) => {
   try {
     const data = await axios.get(process.env.REACT_APP_ONE_CALL_URL, {
-      params: { units: units, lat: lat, lon: lon, appid: process.env.REACT_APP_API_KEY },
+      params: { units: units, lat: lat, lon: lon, appid: process.env.REACT_APP_API_KEY || process.env.REACT_APP_API_KEY_BACKUP },
     });
     return data.data;
   } catch (err) {

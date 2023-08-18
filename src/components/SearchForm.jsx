@@ -10,16 +10,16 @@ import getSearchData from '../services/searchData'
 
 
 const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
-  
+
   const {
     value,
     setValue,
     suggestions: {status, data},
     clearSuggestions
   } = usePlacesAutocomplete({ 
+        callbackName: "initMap",
         requestOptions: 
           { types: ['(cities)'] }, 
-          callbackName: 'initMap'
       })
 
   const handleSelect = async (address) => {
