@@ -29,8 +29,7 @@ function App() {
   });
 
   const [location, setLocation] = useState();
-  const [coords, setCoords] = useState({lat: "29.76", lng: "-95.36"})
-  const [backgroundURL, setBackgroundURL] = useState("")
+  const [coords, setCoords] = useState({lat: 29.76, lng: -95.36})
   const [isImperial, setIsImperial] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,47 +38,34 @@ function App() {
   const handleSubmit = async (data) => {
     setLocation(data.location)
     setCoords(data.coords)
-    setBackgroundURL(data.background)
   };
 
   const handleUnitClick = () => {
     setIsImperial(!isImperial);
   };
 
-  useEffect(() => {
-    const getInitial = async (place_id, initial) => {
-      if (navigator.geolocation) {
-        await navigator.geolocation.getCurrentPosition((position) => {
-          setCoords({lat: position.coords.latitude, lng: position.coords.longitude})
-        })
-      }
-      const data = await getSearchData(place_id, initial, coords)
-      handleSubmit(data)
-    }
-    
-    let x
-    const geocoder = new window.google.maps.Geocoder()
-    const latlngStr = coords.lat.toString() + " " + coords.lng.toString()
-    const latlngSpl = latlngStr.split(" ", 2)
-    const latlng = {
-      lat: parseFloat(latlngSpl[0]),
-      lng: parseFloat(latlngSpl[1])
-    }
-    geocoder
-      .geocode({ location: latlng})
-      .then((results) => {
-        x = results.results[0].place_id.toString()
-        getInitial(x, true)
+  const handleLocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition( async (position) => {
+        setCoords({lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)})
       })
-      .catch((e) => {
-        console.error(e)
-      })
-    
-  }, [])
+    }
+  }
 
+  const handleErrorClose = () => {
+    const cover = document.querySelector("#app-cover")
+    const modal = document.querySelector("#error-modal")
+    cover.style.display = "none"
+    modal.style.display = "none"
+  }
+   
   useEffect(() => {
     setLoading(true);
     const getWeather = async () => {
+      localStorage.setItem("background", null)
+      const searchData = await getSearchData(null, false, coords)
+      setLocation(searchData.location)
+      console.log(location)
       try {
         const data = await getFormattedWeatherData({
           lat: coords.lat,
@@ -93,19 +79,20 @@ function App() {
           dailyData: data.daily,
           details: data.details,
           icon: data.current.icon,
-          currentBackground: backgroundURL,
+          currentBackground: localStorage.getItem("background"),
           isDay: data.isDay,
         });
 
         setError("");
         setLoading(false);
       } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        console.error(err)
+        setError(err);
       }
     };
     getWeather(location);
-  }, [location, isImperial, backgroundURL]);
+  }, [ isImperial, coords ]);
+
 
   return (
     <>
@@ -120,14 +107,14 @@ function App() {
         <main className="w-full h-inherit overflow-y-scroll">
           <GetBackground data={{ cond: forecast.icon, error: error }} />
           <div className="h-fit flex flex-col items-center bg-center bg-no-repeat pt-10 gap-5 bg-fixed z-10 w-inherit">
-            {error && <Error error={error} onClick={setError("")} />}
+            {error && <Error error={error} onClose={handleErrorClose}/>}
             <SearchForm
               onSubmit={(location) => {
                 handleSubmit(location);
               }}
               handleUnitClick={handleUnitClick}
               isImperial={isImperial}
-              isLoading={isLoading}
+              handleLocation={handleLocation}
             />
             <div className=" w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3 3xl:w-1/3 flex flex-col gap-10">
               <CurrentWeather

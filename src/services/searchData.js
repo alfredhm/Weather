@@ -1,18 +1,6 @@
 import { getGeocode, getLatLng, getDetails } from 'use-places-autocomplete'
 import { findLargest } from '../util/findLargest'
 
-const getPhoto = (request) => {
-  const map = new window.google.maps.Map(document.createElement('div'))
-  const service =  new window.google.maps.places.PlacesService(map)
-  var photo
-
-  service.getDetails(request, async (place) => {
-    photo = await findLargest(place.photos)
-    console.log(photo)
-    return photo
-  })
-}
-
 const getSearchData = async (address, initial, coords) => {
     let results
     let locationParts
@@ -20,13 +8,36 @@ const getSearchData = async (address, initial, coords) => {
     let lat
     let lng
     let placeId
+    let x
 
-    if (initial) {
+    if (address === null) {
+      const geocoder = new window.google.maps.Geocoder()
+      const input = coords.lat.toString() + "," +  coords.lng.toString();
+      const latlngStr = input.split(",", 2);
+      const latlng = {
+        lat: parseFloat(latlngStr[0]),
+        lng: parseFloat(latlngStr[1]),
+      };
+
+      await geocoder
+        .geocode({ location: latlng, })
+        .then((response => {
+          results = response.results
+          const locationObject = x = results.filter((result) => result.types.includes("locality") || result.types.includes('administrative_area_level_2'))[0]
+          location = locationObject.address_components[0].short_name
+          placeId = locationObject.place_id
+          lat = locationObject.geometry.location.lat()
+          lng = locationObject.geometry.location.lng()
+        }))
+        .catch((error) => console.error(error))
+
+    } else if (initial) {
       results = await getDetails({ placeId: address })
-      location = results.address_components[3].long_name
+      location = results.vicinity
       placeId = results.place_id
       lat = coords.lat
       lng = coords.lng
+
     } else {
       results = await getGeocode({ address })
       locationParts = results[0].formatted_address.split(',')
@@ -36,13 +47,12 @@ const getSearchData = async (address, initial, coords) => {
       } else {
         location = locationParts[0].replace(/[0-9]/g, '')
       }
-
-      let coords =  await getLatLng(results[0])
+      
+      let coords = getLatLng(results[0])
       lat = coords.lat
       lng = coords.lng
       placeId = results[0].place_id
     }
-
 
     const request = {
       placeId: placeId,
@@ -51,17 +61,20 @@ const getSearchData = async (address, initial, coords) => {
       ]
     }
 
-    const photo = getPhoto(request)
-    console.log(getPhoto(request))
+  const map = new window.google.maps.Map(document.createElement('div'))
+  const service =  new window.google.maps.places.PlacesService(map)
 
-    return {
-      location: location, 
-      coords: {lat: lat, lng: lng}, 
-      placeId: placeId, 
-      background: photo
-    }
+  service.getDetails(request, async (place, status) => {
+    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+      localStorage.setItem("background", await findLargest(place.photos))
+    }})
 
-
+  return {
+    location: location, 
+    coords: {lat: lat, lng: lng}, 
+    placeId: placeId, 
+    photo: localStorage.getItem("background")
+  }
 }
 
 export default getSearchData

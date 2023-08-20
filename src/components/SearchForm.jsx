@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 // Icons/Images
 import { FaSearch } from'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
+import { TbMapPinShare } from 'react-icons/tb'
 
 // Shoogle
 import usePlacesAutocomplete from 'use-places-autocomplete'
 import getSearchData from '../services/searchData'
 
 
-const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
+const SearchForm = ({ onSubmit, handleUnitClick, isImperial, handleLocation }) => {
 
   const {
     value,
@@ -27,7 +28,7 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
       setValue(address, false)
       clearSuggestions()
       const searchData = await getSearchData(address)
-      onSubmit(searchData)
+      await onSubmit(searchData)
       setValue("")
 
     } catch (error) {
@@ -39,8 +40,7 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
   return (
     <>
       <form
-        onSubmit={(e) => {
-          e.preventDefault()
+        onSubmit={() => {
           handleSelect(value)
         }} 
         className="flex flex-row w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-1/3">
@@ -61,10 +61,15 @@ const SearchForm = ({ onSubmit, handleUnitClick, isImperial }) => {
                     className="w-full pr-2 rounded-xl ml-5 h-9  bg-transparent focus:border-none, outline-none placeholder:text-white placeholder:text-xs placeholder:xs:text-sm placeholder:sm:text-base"
                   />
                 </div>
-                <div onClick={handleUnitClick} className="flex items-center h-5 z-10 mr-4 justify-center hover:cursor-pointer">
-                  <p className={isImperial ? "text-white/50" : "text-white"}>C</p>
-                  <p className="text-3xl hover:text-white/50">|</p>
-                  <p className={!isImperial ? "text-white/50" : "text-white"}>F</p>
+                <div className="flex items-center flex-row">
+                  <div className="flex items-center h-5 z-10 mr-2 justify-center hover:cursor-pointer" onClick={handleUnitClick}>
+                    <p className={isImperial ? "text-white/50" : "text-white"}>C</p>
+                    <p className="text-3xl hover:text-white/50">|</p>
+                    <p className={!isImperial ? "text-white/50" : "text-white"}>F</p>
+                  </div>
+                  <div onClick={handleLocation} className="hover:cursor-pointer">
+                    <TbMapPinShare size={20} className="mr-3"/>
+                  </div>
                 </div>
               </div>
               <div className="w-full">
