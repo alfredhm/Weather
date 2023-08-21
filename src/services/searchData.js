@@ -8,7 +8,6 @@ const getSearchData = async (address, initial, coords) => {
     let lat
     let lng
     let placeId
-    let x
 
     if (address === null) {
       const geocoder = new window.google.maps.Geocoder()
@@ -23,7 +22,7 @@ const getSearchData = async (address, initial, coords) => {
         .geocode({ location: latlng, })
         .then((response => {
           results = response.results
-          const locationObject = x = results.filter((result) => result.types.includes("locality") || result.types.includes('administrative_area_level_2'))[0]
+          const locationObject = results.filter((result) => result.types.includes("locality") || result.types.includes('administrative_area_level_2'))[0]
           location = locationObject.address_components[0].short_name
           placeId = locationObject.place_id
           lat = locationObject.geometry.location.lat()

@@ -65,33 +65,38 @@ function App() {
       localStorage.setItem("background", null)
       const searchData = await getSearchData(null, false, coords)
       setLocation(searchData.location)
-      console.log(location)
+      const data = await getFormattedWeatherData({
+        lat: coords.lat,
+        lon: coords.lng,
+        units: isImperial ? "imperial" : "metric",
+      });
+
+      setForecast({
+        currentData: data.current,
+        hourlyData: data.hourly,
+        dailyData: data.daily,
+        details: data.details,
+        icon: data.current.icon,
+        currentBackground: localStorage.getItem("background"),
+        isDay: data.isDay,
+      });
+
+      setError("");
+      setLoading(false);
+    };
+
+    try {
+      getWeather(location);
+    } catch (err) {
       try {
-        const data = await getFormattedWeatherData({
-          lat: coords.lat,
-          lon: coords.lng,
-          units: isImperial ? "imperial" : "metric",
-        });
-
-        setForecast({
-          currentData: data.current,
-          hourlyData: data.hourly,
-          dailyData: data.daily,
-          details: data.details,
-          icon: data.current.icon,
-          currentBackground: localStorage.getItem("background"),
-          isDay: data.isDay,
-        });
-
-        setError("");
-        setLoading(false);
+        getWeather(location);
       } catch (err) {
         console.error(err)
         setError(err);
       }
-    };
-    getWeather(location);
-  }, [ isImperial, coords ]);
+    }
+
+  }, [ isImperial, coords, location ]);
 
 
   return (
